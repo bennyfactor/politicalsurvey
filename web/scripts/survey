@@ -1,0 +1,195 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# survey:
+# Perform the political survey.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: survey,v 1.4 2003/11/18 23:43:21 chris Exp $';
+
+use strict;
+
+use CGI qw(-no_xhtml);
+use CGI::Fast;
+use CGI::Carp;
+use HTML::Entities;
+use Error qw(:try);
+
+use PoliticalSurvey;
+
+#
+# Design:
+#
+# We have a bunch of questions and their converses, which are read from a
+# table. We only care about `active' questions.
+#
+# For each respondent, we generate a random integer ID. This is used for two
+# purposes:
+#
+#   - as a random seed to determine the way that the survey is presented;
+#
+#   - as an ID under which to store the result in the database.
+#
+# Each question in the survey is presented in either its normal or converse
+# form. A few questions are presented in both forms, as a type of calibration.
+# We want to present a question and its converse as far apart as possible.
+#
+# We also ask the respondent their country of origin, guessing it from their
+# IP address.
+#
+# When we have the answers, we save them into a separate database table under
+# the previously-generated ID. Then we pass this on to a second URL to display
+# the results.
+#
+
+my $dbh = PoliticalSurvey::DB::database();
+    
+try {
+    while (my $q = new CGI::Fast()) {
+        # XXX should try to obtain a new unique survey ID.
+        my $surveyid = $q->param("surveyid");
+        $surveyid ||= int(rand(0x7fffffff));
+        throw Error::Simple("surveyid `$surveyid' isn't a positive integer") unless (int($surveyid) eq $surveyid and $surveyid > 0);
+
+        my $countries = PoliticalSurvey::DB::get_countries_hash($dbh);
+        my $statements = PoliticalSurvey::DB::get_statement_list($dbh, $surveyid);
+
+        if (!$q->param("country") || !exists($countries->{$q->param("country")})) {
+            $q->param("country", PoliticalSurvey::DB::get_country_from_ip($dbh, $ENV{REMOTE_ADDR}));
+        }
+
+        # Build a list of answers to questions.
+        my @answers;
+        my @bad;
+        my $good = 0;
+        foreach (@$statements) {
+            my ($id, $text, $isconverse) = @$_;
+            my $val = $q->param("stmt_${id}_${isconverse}");
+            if (!defined($val) || $val !~ /^0|[+-][12]$/) {
+                push(@bad, 1); # needs to be filled in
+                push(@answers, []);
+                $q->param("stmt_${id}_${isconverse}", "X");
+            } else {
+                push(@bad, 0);
+                push(@answers, [$id, $isconverse, $val]);
+                ++$good;
+            }
+        }
+
+        if ($good == scalar(@$statements)) {
+            if (PoliticalSurvey::DB::save_answers($dbh, $surveyid, \@answers)
+                && PoliticalSurvey::DB::save_session_data($dbh, $surveyid, $ENV{REMOTE_ADDR}, $q->param("country"))) {
+                # Redirect to the results page with the survey id.
+                $dbh->commit();
+                my $url = $q->url(); $url =~ s/survey$/results?surveyid=$surveyid/;
+                print $q->redirect($url);
+            } else {
+                $dbh->rollback();
+            }
+        } else {
+            # Produce a survey page.
+            print "Content-Type: text/html; charset=iso-8859-1\n\n",
+                    PoliticalSurvey::HTML::html_head("Political Survey"),
+                    $q->p(q(In this survey, you are asked to give your opinion
+                        of a set of statements characterising political views.
+                        Please rate each statement on the scale given, which
+                        runs from "strongly disagree" to "strongly agree".)),
+#                    $q->p($q->strong(q(At present, we're only
+#                        <em>collecting</em> data; we don't have enough to
+#                        produce an informative result at the end. But please
+#                        take the test anyway, and bookmark the "results" page
+#                        so that you can come back later and see where your
+#                        answers place you.))),
+                    $q->hr(),
+                    $q->start_form(-method => 'POST'),
+                    "<div>",    # needed for HTML 4.01 compliance, apparently
+                    $q->hidden(-name => 'surveyid',
+                               -value => $surveyid);
+
+            # Only ask for country at beginning of survey....
+            if ($good == 0) {
+                print q(<table class="surveystatements"><tr><td>For statistical purposes, please tell us where
+                        you live:</td><td>),
+                    $q->popup_menu(-name => 'country',
+                                   -values => PoliticalSurvey::DB::get_country_codes_list($dbh),
+                                   -labels => $countries),
+                        q(</td></tr></table>),
+                        $q->hr();
+            } else {
+                print $q->p(qq(You've completed $good of ), scalar(@$statements), q( questions.)),
+                        $q->hidden(-name => 'country'),
+                        $q->hr();
+            }
+
+            print $q->p(qq(The following are a set of propositions. Tell us
+                whether you agree with them, <em>as they would apply to the
+                country where you live</em>.));
+
+            # Now generate the survey table. We use drop-down lists for the
+            # survey answers because HTML's treatment of radio buttons is
+            # broken; cf. http://ppewww.ph.gla.ac.uk/~flavell/www/testradio.html
+            print q(<table class="surveystatements">);
+
+            my $nrows = 0;
+            for (my $i = 0; $i < @$statements; ++$i) {
+                my ($id, $text, $isconverse) = @{$statements->[$i]};
+
+                next if ($bad[$i] == 0);
+                
+                encode_entities($text);
+                print qq(<tr class="surveyrow"><td>$text</td><td>),
+                        $q->popup_menu(-name => "stmt_${id}_${isconverse}",
+                                       -values => [qw(X -2 -1 0 +1 +2)],
+                                       -default => 'X',
+                                       -labels => {  "X" => 'Select one...',
+                                                    "-2" => 'Disagree strongly',
+                                                    "-1" => 'Disagree',
+                                                     "0" => 'No opinion',
+                                                    "+1" => 'Agree',
+                                                    "+2" => 'Agree strongly' }),
+                        q(</td></tr><tr><td colspan="2"><hr></td></tr>);
+
+                ++$nrows;
+
+                last if ($nrows == 15);
+            }
+            
+            print q(</table>);
+
+            for (my $i = 0; $i < @$statements; ++$i) {
+                my ($id, $text, $isconverse) = @{$statements->[$i]};
+                print $q->hidden(-name => "stmt_${id}_${isconverse}") if (!$bad[$i]);
+                
+            }
+        
+
+            print $q->p($q->submit('Continue >>'));
+
+            print "</div>",
+                    $q->end_form();
+
+            print PoliticalSurvey::HTML::html_tail();
+        }
+
+        # XXX DBD::SQLite begins a transaction even for a SELECT, so roll back
+        # now. This is a hack, and I am ashamed.
+        $dbh->rollback();
+    }
+} catch Error::Simple with {
+    my $E = shift;
+    my $msg = sprintf('%s:%d: %s', $E->file(), $E->line(), $E->text());
+    warn "caught fatal exception: $msg";
+    warn "aborting";
+    encode_entities($msg);
+    print "Status: 500\nContent-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: error"),
+            q(<p>Unfortunately, something went wrong. The text of the error
+                    was:</p>),
+            qq(<blockquote class="errortext">$msg</blockquote>),
+            q(<p>Please try again later.),
+            PoliticalSurvey::HTML::html_tail();
+};
+
+$dbh->disconnect();

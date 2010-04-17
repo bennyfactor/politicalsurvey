@@ -1,0 +1,69 @@
+0,"New roads and railways should be built by private companies, not the government.","New roads and railways should be built by the government, not private companies.","economics, state control",1
+1,"Services like health care, education and social security should be provided by the government, not by private enterprise.","Services like health care, education and social security should be provided by private enterprise, not by the government.","economics, state control",1
+2,"Sometimes interest rates should be raised to reduce inflation, even if doing so would cause a large number of job losses.","It's not worth raising interest rates to reduce inflation if this would result in the loss of large numbers of jobs.","economics, importance of inflation",1
+3,"Drivers should pay enough tax to cover the cost of environmental damage caused by motor transport, even if that would price some people off the roads.","Drivers shouldn't have to pay taxes to cover damage to the environment caused by motor transport, since that would price some people off the roads.","economics, externalities",1
+4,"The wealthy should pay a larger proportion of their income in tax than the poor.","The wealthy shouldn't pay a larger proportion of their income in tax than the poor.","economics, taxation, progressive/regressive",1
+5,"The government should raise revenue by taxing consumption rather than income.","The government should raise revenue by taxing income rather than consumption.","economics, taxation, direct/indirect",1
+6,"Overall, economic migrants bring benefits to our country.","Overall, economic migrants are a drain on our country.","economics, open borders; society, multiculturalism",1
+7,"The government should subsidise farmers so that they stay in business, even if it would be cheaper to buy food from abroad.","There's no need to subsidise farmers if we can buy food more cheaply from abroad, even if that meant they went out of business.","economics, protectionism; society, importance of farming",1
+8,"Smokers should be required to kick the habit before receiving medical care for smoking-related illnesses.","Smokers should be able to receive medical care for smoking-related illnesses even if they still smoke.","society, personal responsibility",1
+9,"Everyone bears a moral responsibility for the actions of their government, even when they do not support them.","Nobody bears a moral responsibility for actions of their government if they don't support them.","society, collective responsibility",1
+10,"Anybody who wants top-quality health care should expect to have to pay for it.","Everybody has a right to top-quality health care, even if they aren't wealthy.","society, access to health care",1
+11,"The mix of minorities in public institutions should reflect their numbers in the general population.","It doesn't matter whether the mix of minorities in public institutions reflects their numbers in the general population.","society, affirmative action",1
+12,"Having individual local representatives is more important than electing parties in exact proportion to their support.","It's more important that we elect parties in exact proportion to their support than that we each have individual local representatives.","society, proportional representation",1
+13,"Officials like public prosecutors should be directly elected rather than chosen by the government.","Officials like public prosecutors should be chosen by the government, not directly elected.","society, technocracy/local democracy",1
+14,"For society to be cohesive, it is important that everyone shares a common language.","A common language is not necessary for a cohesive society.","society, multiculturalism",1
+15,"Legal protection for free expression creates more trouble than it's worth.","We should maintain the right to free expression, even if some people use it to create trouble.","society, fundamental rights",1
+16,"Nobody should go hungry, even if they refuse to work.","People who refuse to work should run the risk of going hungry.","society, the welfare state",1
+17,"Some art should receive government funding.","Art shouldn't receive government funding.","society, culture",1
+18,"Our nation has a glorious history.","Our nation's history is not particularly glorious.","society, national character",1
+19,"A person's social status shouldn't depend on who their parents are.","A person's social status should depend on who their parents are.","society, class",1
+20,"We should offer sanctuary to anybody fleeing persecution.","We can't offer sanctuary to everyone who is fleeing persecution.","society, asylum seekers",1
+21,"There are some ethnic groups who can never be fully integrated into our society.","People of any ethnic group can be fully integrated into our society.","society, racism",1
+22,"Everyone should stand up for the National Anthem.","There is no reason to stand up for the National Anthem.","society, patriotism",1
+23,"Class distinctions should exist.","Class distinctions should not exist.","society, class",1
+24,"To protect society from drug abuse, narcotics must be banned.","It is not necessary to ban narcotics to protect society from drug abuse.","society, prohibition",1
+25,"Alcohol is a more dangerous drug than marijuana.","Marijuana is a more dangerous drug than alcohol.","society, drugs",1
+26,"Shared religious beliefs should be an important part of our society.","Shared religious belief isn't an important part of our society.","society, religion",1
+27,"Family is more important than society.","Society is more important than family.","society, family",1
+28,"Sometimes the only way to make a legitimate point of view heard is to break the law.","It is never necessary to break the law to make a legitimate point of view heard.","society, protest",1
+29,"Our society needs more lawyers.","Our society doesn't need any more lawyers.","society, importance of qualified experts",1
+30,"Some crimes are so serious that the only proper punishment is the death penalty.","No crime, however serious, should be punished by death.","justice, death penalty",1
+31,"Dealing with nuisance crimes like petty vandalism makes serious crime less likely.","Dealing with nuisance crimes like petty vandalism doesn't make serious crime less likely.","justice, zero tolerance",1
+32,"Everyone should have the right to trial by jury.","Trial by jury shouldn't always be available by right.","justice, jury trial",1
+33,"It's more important to rehabilitate criminals than to punish them.","It's more important to punish criminals than to rehabilitate them.","justice, rehabilitation",1
+34,"It is only acceptable to use proportionate force to defend your property from criminals.","It is acceptable to use any amount of force you choose to defend your property from criminals.","justice, vigilanteism",1
+35,"Members of our society should be familiar with the history and traditions of our culture.","Members of society needn't be familiar with the history and traditions of our culture.","education, tradition",1
+36,"Overall, young people benefit from compulsory military service.","Overall, young people don't benefit from compulsory military service.","education, national service",1
+37,"Schools should concentrate on training people for the workforce.","Schools should do much more than just training people for the workforce.","education, vocational",1
+38,"Schools should not teach children anything which contradicts their parents' religious faith.","Sometimes schools should teach children things which contradict their parents' religious faith.","education, importance of religion",1
+39,"Some people should not have access to the Internet.","Everyone should have access to the Internet.","education, access",1
+40,"Correct grammar is important.","Correct grammar doesn't matter.","education, traditional values",1
+41,"Scientists bear no moral responsibility for how their discoveries are used.","Scientists bear a moral responsibility for how their discoveries are used.","morality, the Feynman question",1
+42,"Some technologies should never be used, whatever their benefits.","We should make use of any technology, if it benefits us.","morality, applications of technology",1
+43,"Some medical research would require so many animal experiments that it should not be done, whatever the benefits.","Beneficial medical research should always go ahead, however many animal experiments would be performed","morality, animal experiments",1
+44,"Religious faith should be based on the literal word of God.","Religious faith needn't be based on the literal word of God.","religion, evangelicism/scirtural literalism",1
+45,"There is a place for organised religion in government.","There is no place for organised religion in government.","religion, state",1
+46,"There are some sexual acts which are immoral, even between consenting adults.","There is no such thing as an immoral sexual act between consenting adults.","morality, sex and consent",1
+47,"It is immoral to be lazy.","Laziness is not immoral.","morality, work ethic",1
+48,"It is never moral to break the law.","Breaking the law is not always immoral.","morality, legality",1
+49,"No woman should be allowed to have an abortion, whatever the circumstances.","Abortion is acceptable in some cases.","morality, abortion",1
+50,"National law should always override international agreements.","Sometimes international agreements should override national law.","international, multilateralism",1
+51,"Sometimes civilians are a legitimate military target.","Civilians are never a legitimate military target.","international, laws of war",1
+52,"The people of this country have a very different character to those of our neighbours.","Fundamentally, the people of this country have the same character as those of our neighbours.","international, national character",1
+53,"Aid projects abroad should always be funded by charities, not the taxpayer.","Some overseas aid projects should be funded by the taxpayer, and can't be left to charities.","international, government foreign aid",1
+54,"It's acceptable for a businessman to bribe a foreign official to complete a sale.","It's unacceptable for a businessman to bribe a foreign official to complete a sale.","international, moral relativism",1
+55,"Our armed forces should intervene to stop genocide in other countries.","Our armed forces shouldn't intervene in other countries, even to stop genocide.","international, armed intervention",1
+56,"Our sense of right and wrong comes from religious faith.","We don't need religious faith to have a sense of right and wrong.","religion, morality",1
+57,"Children should always obey their parents.","Sometimes children shouldn't obey their parents.","morality, family obedience",1
+58,"In the right circumstances, cutting taxes can increase government revenue.","Cutting taxes can't ever increase government revenue.","economics, Laffer curve",1
+59,"Economic globalisation will increase inequality.","Economic globalisation will decrease inequality.","economics, free trade",1
+60,"It's more important to make the poor richer than to decrease the gap between rich and poor.","It's more important to decrease the gap between rich and poor than to make the poor richer.","economics, perception of disparity",1
+61,"There is a danger that some large corporations will become more powerful than governments.","Governments will always be more powerful than large corporations.","economics, power of corporations",1
+62,"Aggressive foreign policies can put a stop to international terrorism.","Aggressive foreign policies will not put a stop to international terrorism.","international, war on terror",1
+63,"Drug abuse is a problem primarily because of its effects on drug users, not its effects on the rest of society.","Drug abuse is a problem primarily because of its effects on society, not its effects on drug users alone.","society, drugs",1
+64,"The only way for some workers to achieve fair pay is through collective bargaining.","Workers don't need to resort to collective bargaining to achieve fair pay.","economics, trades unions",1
+65,"Nobody should be sacked for going on strike.","Sometimes it's necessary to sack people who go on strike.","society, trades unions",1
+66,"Small businesses are more important to the economy than large corporations.","Large corporations are more important to the economy than small businesses.","economics, economies of scale",1
+67,"The government should act to stop companies paying executives excessive salaries.","Companies should be free to pay their executives any salary, however large.","economics, society, fat cats",1
+68,"Workers in the public sector should be paid as much as those doing similar jobs in private industry.","Workers in the public sector shouldn't expect to earn as much as those doing similar jobs in private industry.","economics, public vs. private",1

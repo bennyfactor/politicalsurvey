@@ -1,0 +1,122 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# statementlist:
+# List the statements about which we ask opinions.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: statementlist,v 1.4 2003/11/18 23:43:21 chris Exp $';
+
+use strict;
+
+use CGI::Fast qw(-no_xhtml);
+use CGI::Carp;
+use HTML::Entities;
+use Error qw(:try);
+
+use PoliticalSurvey;
+
+my $dbh = PoliticalSurvey::DB::database();
+    
+sub html_version ($) {
+    my $q = shift;
+    print "Content-Type: text/html; charset=iso-8859-1\n\n",
+        PoliticalSurvey::HTML::html_head("Political Survey: Statements"),
+        $q->p(q(This is the list of statements about which we ask the
+                opinion of punters. Each statement has a "normal" and a
+                "converse" form. We ask each statement once, choosing the
+                normal or converse form at random, and for a few statements,
+                also ask them in their second form. The idea of this is that we
+                can later see whether the answers to the two forms of each
+                question are inversely correlated, as they should be. This
+                tests whether the statements are balanced.)),
+        $q->p(q{(Statements have a "category", too, but it's not used and isn't
+                stored in the on-line database.)}),
+        $q->p(q(The only feature that these statements need is that they garner
+                a range of answers: since we only allow five shades of opinion
+                for each question, it's important that we don't throw away any
+                part of the dynamic range. With enough answers to the quiz
+                (much more than five) it is possible to tell whether this
+                criterion has been achieved. Beyond this, bias in the
+                statements doesn't much matter.)),
+        $q->p(q(A second requirement is that the <em>whole set</em> of
+                statements describes the <em>whole space</em> of peoples'
+                political views.  This is harder to verify. As a first stab, I
+                want to compile the responses we would expect from well-known
+                figures such as contemporary politicians and see whether the
+                statements separate them from one another as much as we would
+                like intuitively.)),
+        $q->hr(),
+        $q->p(q((You can also get <a href="statementlist?csv=1;x=.csv">a copy
+                of the statements in CSV format suitable for reading into a
+                spreadsheet</a>.))),
+        $q->hr();
+
+    print q(<table>
+            <tr>
+            <th>ID</th>
+            <th>Normal statement</th>
+            <th>Converse statement</th>
+            </tr>);
+
+    my $x = $dbh->selectall_arrayref('select id, normal, converse from statement order by id');
+    foreach (@$x) {
+        my ($id, $norm, $conv) = @$_;
+        print qq(<tr><td>$id</td><td>),
+            encode_entities($norm),
+            q(</td><td>),
+            encode_entities($conv),
+            q(</td></tr>);
+    }
+
+    print q(</table><hr>),
+    $q->p(q(Now you're done reading those, you can take <a href="survey">the
+            survey</a>, if you haven't done so already.)),
+            PoliticalSurvey::HTML::html_tail();
+}
+
+# csv_version
+# Output statements in CSV, with DOS line endings.
+sub csv_version ($) {
+    my $q = shift;
+    print qq(Content-Type: text/csv\nContent-Disposition: attachment; filename="politicalsurvey-statements.csv"\n\n),
+            qq(Statement ID","Normal form","Converse Form","Answer","Rationale"\r\n);
+    my $x = $dbh->selectall_arrayref('select id, normal, converse from statement order by id');
+    foreach (@$x) {
+        my ($id, $norm, $conv) = @$_;
+        $norm =~ s/"/""/g;
+        $conv =~ s/"/""/g;
+        print qq($id,"$norm","$conv",,\r\n);
+    } 
+}
+
+try {
+    while (my $q = new CGI::Fast()) {
+        if ($q->param('csv')) {
+            csv_version($q);
+        } else {
+            html_version($q);
+        }
+
+        # XXX DBD::SQLite begins a transaction even for a SELECT, so roll back
+        # now. This is a hack, and I am ashamed.
+        $dbh->rollback();
+    }
+} catch Error::Simple with {
+    my $E = shift;
+    my $msg = sprintf('%s:%d: %s', $E->file(), $E->line(), $E->text());
+    warn "caught fatal exception: $msg";
+    warn "aborting";
+    encode_entities($msg);
+    print "Status: 500\nContent-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: error"),
+            q(<p>Unfortunately, something went wrong. The text of the error
+                    was:</p>),
+            qq(<blockquote class="errortext">$msg</blockquote>),
+            q(<p>Please try again later.),
+            PoliticalSurvey::HTML::html_tail();
+};
+
+$dbh->disconnect();

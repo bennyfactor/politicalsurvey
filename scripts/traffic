@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# traffic:
+# Do a plot of traffic to the survey. (In combination with GNUPLOT, obviously.)
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+# $Id: traffic,v 1.1 2003/11/26 22:16:24 chris Exp $
+#
+
+sqlite /path/to/politicalsurvey/politicalsurvey.sqlite <<EOF | perl -MPOSIX -n -e 'chomp; print strftime("%Y-%m-%d_%H:%M:%S", localtime($_)), " ", ++$n, "\n"'
+.output stdout
+.mode columns
+select timewhen from session where timewhen <> 0 order by timewhen;
+.quit
+EOF
+

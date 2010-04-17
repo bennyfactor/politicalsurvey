@@ -1,0 +1,247 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# celebrity:
+# Manipulate data about political `celebrities' used for comparisons in the
+# scatter plot.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: celebrity,v 1.1 2003/11/06 20:17:23 chris Exp $';
+
+use strict;
+
+use CGI::Fast qw(-no_xhtml);
+use CGI::Carp;
+use HTML::Entities;
+use Error qw(:try);
+use POSIX;
+
+use PoliticalSurvey;
+
+my $dbh = PoliticalSurvey::DB::database();
+
+my $edit = 0;
+$edit = 1 if ((uname())[1] =~ /caesious/); # XXX edits work on local copy
+
+
+sub do_individual ($$) {
+    my ($q, $session) = @_;
+
+    my %stext = map { $_->[0] => [$_->[1], $_->[2]] } @{$dbh->selectall_arrayref('select id, normal, converse from statement where enabled <> 0')};
+    
+    if ($edit) {
+        if ($session eq 'new') {
+            do {
+                $session = int(rand(0x7fffffff));
+            } while (PoliticalSurvey::DB::select_single_value($dbh, 'select count(*) from session where id = ?', $session));
+            # Create new celebrity, session and answers.
+            $dbh->do(q(insert into celebrity (sessionid, name, notes, image)
+                            values (?, 'New celebrity', '<p></p>', '../celebrity-portraits/blank.png')), {}, $session);
+            $dbh->do(q(insert into session (id, ipfrom, country, timewhen) values (?, '127.0.0.1', 'GB', 0)), {}, $session);
+            foreach (keys %stext) {
+                $dbh->do(q(insert into answer (sessionid, statementid, converse, value) values (?, ?, 0, 0)), {}, $session, $_);
+            }
+            $dbh->commit();
+            print $q->redirect("celebrity?celebid=$session");
+            return;
+        } elsif ($q->param('edit')) {
+            $dbh->do(q(update celebrity set name = ?, notes = ?, image = ? where sessionid = ?), {}, $q->param('name'), $q->param('notes'), $q->param('image'), $session);
+            $dbh->do(q(update session set country = ? where id = ?), {}, $q->param('country'), $session);
+            foreach (keys %stext) {
+                my ($val, $rat) = ($q->param("ans_$_"), $q->param("rationale_$_"));
+                if (defined($val)) {
+                    $dbh->do('delete from answer where statementid = ? and sessionid = ?', {}, $_, $session);
+                    $dbh->do('insert into answer (sessionid, statementid, converse, value) values (?, ?, 0, ?)', {}, $session, $_, $val);
+                }
+                if (defined($rat)) {
+                    $dbh->do('delete from celebrityanswerrationale where statementid = ? and sessionid = ?', {}, $_, $session);
+                    $dbh->do('insert into celebrityanswerrationale (sessionid, statementid, rationale) values (?, ?, ?)', {}, $session, $_, $rat);
+                }
+            }
+            $dbh->commit();
+            print $q->redirect("celebrity?celebid=$session");
+            return;
+        }
+    }
+
+    my ($name, $countrycode, $country, $notes, $image) = PoliticalSurvey::DB::select_single_row($dbh, 'select celebrity.name, session.country, country.name, notes, image from celebrity, session, country where celebrity.sessionid = ? and celebrity.sessionid = session.id and session.country = country.code', $session);
+    print "Content-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: " . encode_entities($name));
+
+    if ($edit) {
+        my $countries = PoliticalSurvey::DB::get_countries_hash($dbh);
+        print $q->start_form(-method => 'POST'),
+                $q->hidden(-name => 'edit', -value => '1'),
+                $q->hidden(-name => 'celebid', -value => $session),
+                "<p>Name: ",
+                $q->textfield(-name => 'name', -value => $name),
+                "</p><p>Country: ",
+                $q->popup_menu(-name => 'country',
+                                -values => PoliticalSurvey::DB::get_country_codes_list($dbh),
+                                -labels => $countries,
+                                -default => $countrycode),
+                "</p>",
+                "<p>Notes: ",
+                $q->textarea(-name => 'notes',
+                            -value => $notes,
+                            -cols => 60,
+                            -rows => 10),
+                "</p>", $notes,
+                "<p>Portrait: ",
+                $q->textfield(-name => 'image', -value => $image),
+                "</p>", $q->p($q->img({-src => $image, -alt => $name}));
+    } else {
+        print $q->h2(encode_entities($country)),
+            $q->img({-src => $image, -alt => $name}),
+            $notes,
+            $q->h2('Answers'),
+            $q->p('These are the answers which we judge', encode_entities($name),
+                    'would have given to the survey. Where appropriate, answers
+                    are accompanied by a rationale which explains <em>why</em>
+                    we believe this person would have given the answers we claim.');
+    }
+
+    # Answers table itself.
+
+    if ($edit) {
+        print q(<table><tr><th>Statement</th><th>Answer</th></tr>);
+    } else {
+        print q(<table>
+                <tr>
+                <th style="vertical-align: bottom;">Statement</th>
+                <th style="vertical-align: bottom; align: left; border-bottom: none;"><img src="../opinion-scale.png" width="221" height="120" alt="Response"></tr>);
+    }
+
+    # Obtain answers, statement text, rationales.
+    my $answers = PoliticalSurvey::DB::get_answers($dbh, $session);
+    my %rationales = map { $_->[0] => $_->[1] } @{$dbh->selectall_arrayref('select statementid, rationale from celebrityanswerrationale where sessionid = ?', {}, $session)};
+            
+    foreach (sort { $a <=> $b } keys %$answers) {
+        my $v = $answers->{$_};
+        if ($edit) {
+            $rationales{$_} ||= '';
+            print "<tr><td>", encode_entities($stext{$_}->[0]), "<br>",
+                    $q->textarea(-name => "rationale_$_",
+                                    -value => $rationales{$_},
+                                    -cols => 60,
+                                    -rows => 3),
+                    "</td><td>",
+                    $q->popup_menu(-name => "ans_$_",
+                                   -values => [qw(X -2 -1 0 +1 +2)],
+                                   -default => $answers->{$_},
+                                   -labels => {  "X" => 'Select one...',
+                                                "-2" => 'Disagree strongly',
+                                                "-1" => 'Disagree',
+                                                 "0" => 'No opinion',
+                                                "+1" => 'Agree',
+                                                "+2" => 'Agree strongly' }),
+                    "</td></tr>";
+
+                    
+        } else {
+            my $r = (exists $rationales{$_} ? "<br><span class=\"rationale\">$rationales{$_}</span>" : "");
+            print "<tr><td>$stext{$_}->[0]$r</td>";
+
+            my ($w1, $w2);
+            if ($v > 0) {
+                $w1 = 110;
+            } else {
+                $w1 = 10 + int(100 * (1 + $v / 2));
+            }
+            $w2 = int(100 * abs($v) / 2);
+            $w2 = 1 if ($w2 == 0);
+
+
+            printf '<td style="align: left;"><img src="../white.png" width="%d" height="12" alt=""><img src="../grey.png" width="%d" height="12" alt="%+.4f"></td></tr>', $w1, $w2, $v;
+        }
+    }
+    print '</table>';
+
+    if ($edit) {
+        print $q->submit(), $q->end_form();
+    }
+
+    print PoliticalSurvey::HTML::html_tail();
+
+    $dbh->rollback();
+}
+
+sub do_all ($) {
+    my ($q) = @_;
+
+    print "Content-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: Celebrities"),
+            $q->p(q(This is a list of political "celebrities" and the answers
+                    we judge they would have given to the answers in the survey.
+                    Their assumed answers give you a point of comparison for
+                    your own. From this page you can also see what we claim
+                    they would have answered to our questions, and why. If you
+                    think we're wrong, please get in touch to correct us.)),
+            $q->p(q(If you would like to contribute answers for this section,
+                    please do! You can download
+                    <a href="statementlist?csv=1;x=.csv">a copy of the list of
+                    statements</a> in a form suitable for loading into a
+                    spreadsheet. Please email
+                    <a href="mailto:chris@politics.beasts.org">Chris Lightfoot</a>
+                    with any comments, questions or contributions.));
+
+    print '<table><tr><th>Name</th><th>Information</th><th>Left/right</th><th>Pragmatism</th></tr>';
+    
+    my $stmt = $dbh->prepare('select celebrity.sessionid, celebrity.name, country.name, notes, image from celebrity, session, country where celebrity.sessionid = session.id and session.country = country.code order by celebrity.name');
+
+    $stmt->execute();
+
+
+    while (my ($session, $name, $country, $notes, $image) = $stmt->fetchrow_array()) {
+        my ($x, $y, $nx, $ny) = PoliticalSurvey::DB::get_position_2d($dbh, $session);
+        printf '<tr><td><strong><a href="%s">%s</a></strong><br>%s<br>'
+                . '<img src="%s" width="100" height="100"></td>'
+                . '<td>%s</td><td>%+.4f<br>(%+.4f)</td><td>%+.4f<br>(%+.4f)</td></tr>',
+                encode_entities(PoliticalSurvey::HTML::new_url($q, celebid => $session)),
+                encode_entities($name),
+                encode_entities($country),
+                encode_entities($image),
+                $notes,
+                $x, $nx, $y, $ny;
+    }
+
+    print "</table>";
+    
+    if ($edit) {
+        print '<p><a href="celebrity?celebid=new">Create new celebrity</a>.</p>';
+    }
+
+    print PoliticalSurvey::HTML::html_tail();
+
+    # HACK!
+    $dbh->rollback();
+}
+
+try {
+    while (my $q = new CGI::Fast()) {
+        my $sessionid = $q->param('celebid');
+        if (defined($sessionid)) {
+            do_individual($q, $sessionid);
+        } else {
+            do_all($q);
+        }
+    }
+} catch Error::Simple with {
+    my $E = shift;
+    my $msg = sprintf('%s:%d: %s', $E->file(), $E->line(), $E->text());
+    warn "caught fatal exception: $msg";
+    warn "aborting";
+    encode_entities($msg);
+    print "Status: 500\nContent-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: error"),
+            q(<p>Unfortunately, something went wrong. The text of the error
+                    was:</p>),
+            qq(<blockquote class="errortext">$msg</blockquote>),
+            q(<p>Please try again later.),
+            PoliticalSurvey::HTML::html_tail();
+};
+
+$dbh->disconnect();
+

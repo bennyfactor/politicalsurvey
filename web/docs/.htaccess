@@ -1,0 +1,3 @@
+Options +Includes
+DirectoryIndex index.html index.php3 index.htm index.shtml
+AddHandler server-parsed .shtml

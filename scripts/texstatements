@@ -1,0 +1,68 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# texstatements:
+# Produce a copy of the questionnaire in LaTeX format.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: texstatements,v 1.1 2003/10/31 11:34:12 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use PoliticalSurvey;
+
+print <<'EOF';
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{mathpple}
+\usepackage{rotating}
+\usepackage{longtable}
+\usepackage[margin=0.5in,nohead]{geometry}
+
+% definition of a tickable box
+\newcommand\TickBox{$\bigcirc$}
+%\newcommand\TickBox{\framebox[0.15in][s]{\rule{0pt}{0.06in}}}
+
+\pagestyle{empty}
+\setlength\parindent{0pt}
+
+\begin{document}
+
+{\Large\bf Political Survey Questionnaire}
+
+{\large There follow a set of statements. Please indicate with a tick or cross
+in one circle whether you {\em agree}, {\em disagree}, {\em agree strongly},
+or {\em disagree strongly} with, or have {\em no opinion} about each statement,
+as it applies to the country where you live.}
+
+\begin{longtable}{rp{0.75\textwidth}ccccc}
+    &
+    &   \begin{sideways}{\small disagree strongly}\end{sideways}
+    &   \begin{sideways}{\small disagree}\end{sideways}
+    &   \begin{sideways}{\small no opinion}\end{sideways}
+    &   \begin{sideways}{\small agree}\end{sideways}
+    &   \begin{sideways}{\small agree strongly}\end{sideways}        \\
+\hline\\\endhead
+
+EOF
+
+my $dbh = PoliticalSurvey::DB::database();
+
+my $x = $dbh->selectall_arrayref('select id, normal from statement where enabled = 1');
+
+foreach (@$x) {
+    my ($id, $normal) = @$_;
+    printf "\\tiny{%d} & %s\n\n & \\TickBox & \\TickBox & \\TickBox & \\TickBox & \\TickBox\n \\\\ ", $id, $normal;
+}
+
+print <<'EOF';
+\end{longtable}
+
+\end{document}
+EOF
+
+$dbh->disconnect();

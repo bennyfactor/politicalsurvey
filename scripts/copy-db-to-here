@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# copy-db-to-here:
+# Transfer the database from mythic to here.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+# $Id: copy-db-to-here,v 1.2 2003/11/04 18:04:31 chris Exp $
+#
+DIR=politicalsurvey
+FILE=politicalsurvey.sqlite
+HOST=sphinx.mythic-beasts.com
+set -x -e
+rsync -v $HOST:$DIR/$FILE ~/$DIR/$FILE

@@ -1,0 +1,346 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# eigen:
+# Compute eigenvectors and eigenvalues from the data, subsets of the data, and
+# synthetic data sampled from the marginal distributions in an attempt to
+# constrain the eigenvectors.
+#
+# Pass --save-only to just compute the eigenvectors and save them in the
+# database.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: eigen,v 1.3 2003/11/04 18:04:31 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use IO::File;
+
+use Data::Dumper;
+
+use PoliticalSurvey;
+use PoliticalSurvey::Statistics qw(:std);
+
+my $saveonly = (defined($ARGV[0]) && $ARGV[0] eq '--save-only');
+
+my $dbh = PoliticalSurvey::DB::database();
+
+sub debug ($) {
+    print STDERR ">> $_[0]\n";
+}
+
+# Largest number of eigenvectors about which we care.
+use constant NUMEIGS => 4;
+# Compute the mean and standard deviation of the synthetic eigenvectors to 0.5%
+# accuracy.
+use constant SYNTHMARGIN => 0.005;
+# Fraction of the results set we use to compute the eigenvectors when trying
+# to constrain them.
+use constant PARTITIONFRAC => 0.75;
+
+sub mean ($$) {
+    my ($x, $n) = @_;
+    my $t = 0;
+    for (my $i = 0; $i < $n; ++$i) {
+        $t += $x->[$i];
+    }
+    return $t / $n;
+}
+
+sub variance ($$) {
+    my ($x, $n) = @_;
+    my $xm = mean($x, $n);
+    my $t = 0;
+    for (my $i = 0; $i < $n; ++$i) {
+        $t += ($x->[$i] - $xm) ** 2;
+    }
+    return $t / $n;     # should this be the population variance? (/($n-1))
+}
+
+sub dot ($$) {
+    my ($a, $b) = @_;
+    throw Error::Simple("vectors must be of same length") unless (@$a == @$b);
+    my $d = 0;
+    for (my $i = 0; $i < @$a; ++$i) {
+        $d += $a->[$i] * $b->[$i] if (defined($a->[$i]) and defined($b->[$i]));
+    }
+    return $d;
+}
+
+# save_selfcovariance DBH RESULTS STATEMENT
+# For the RESULTS, compute the self-covariance statistics between pairs of
+# normal/converse answers to STATEMENT, and save them in the database.
+sub save_selfcovariance ($$$) {
+    my ($dbh, $res, $s) = @_;
+    my ($sx, $sy, $sxx, $syy, $sxy, $n) = (0, 0, 0 , 0, 0, 0);
+    
+    # HACK: pre-seed with straight line
+    foreach ([-2, 2], [0, 0], [2, -2]) {
+        my ($x, $y) = @$_;
+        $sx += $x;
+        $sxx += $x ** 2;
+        $sy += $y;
+        $syy += $y ** 2;
+        $sxy += $x * $y;
+        ++$n;
+    }
+    
+    foreach (@$res) {
+        my ($x, $y);
+        if (defined($y = $_->[1]->[$s]) and defined($x = $_->[2]->[$s])) {
+            $sx += $x;
+            $sxx += $x ** 2;
+            $sy += $y;
+            $syy += $y ** 2;
+            $sxy += $x * $y;
+            ++$n;
+        }
+    }
+
+    $dbh->do('delete from selfcovariance where statementid = ?', {}, $s);
+    $dbh->do('insert into selfcovariance (statementid, numpts, sumxy, sumxx, sumyy, sumxy, sumx, sumy, until) values (?, ?, ?, ?, ?, ?, ?, ?, 0)', {},
+            $s, $n, $sxy, $sxx, $syy, $sxy, $sx, $sy);
+}
+
+try {
+    debug("retrieving all results");
+    my $all_res = PoliticalSurvey::DB::get_all_answers($dbh);
+
+    debug(scalar(@$all_res) . " sessions");
+    debug(scalar(@{$all_res->[0]->[1]}) . " statements");
+
+    debug("computing, saving selfcovariance statistics");
+    for (my $s = 0; $s < scalar(@{$all_res->[0]->[1]}); ++$s) {
+        save_selfcovariance($dbh, $all_res, $s);
+    }
+    $dbh->commit();
+    debug("done");
+
+    debug("remapping results to normal form");
+    my $norm_res = PoliticalSurvey::Statistics::compute_normal_results($all_res);
+
+    my @sets = PoliticalSurvey::Statistics::find_statement_sets($norm_res);
+    debug(scalar(@sets) . " distinct statement sets");
+
+    my @syn_cov;
+
+    debug("computing whole covariance matrix");
+    my $norm_cov = PoliticalSurvey::Statistics::compute_covariance_matrix($norm_res);
+
+    debug("getting marginal distributions for statements");
+    my $dists = PoliticalSurvey::Statistics::compute_statement_dists($all_res);
+
+    # Now, for each set, compute
+    #   - random eigenvalues, to see which of the real eigenvalues are
+    #     significant;
+    #   - eigenvalues and eigenvectors from the real data;
+    #   - mean and standard deviation of eigenvector components produced from
+    #     partitions of the whole data.
+    for (my $s = 0; $s < @sets; ++$s) {
+        debug("set $s");
+
+        # Ensure that this statement set exists.
+        my %set = map { $_ => 1 } split(/,/, $sets[$s]);
+        my $setid = PoliticalSurvey::DB::get_statementset_create($dbh, \%set);
+
+        debug("set $s has ID $setid");
+
+        debug("Computing eigenvectors from all results");
+        my $eewhole = PoliticalSurvey::Statistics::compute_eigensystem($norm_cov, $sets[$s]);
+
+        # Now we need to change the directions of the first two eigenvectors
+        # to fit our prejudices.
+        
+        # Statement 30 is `Some crimes are so serious that the only proper
+        # punishment is the death penalty.' Eigenvector 0 should have a
+        # positive component for this.
+        if ($eewhole->[0]->[1]->[30] < 0) {
+            debug('first eig has negative score for death penalty question, inverting');
+            for (my $j = 0; $j < @{$eewhole->[0]->[1]}; ++$j) {
+                $eewhole->[0]->[1]->[$j] *= -1;
+            }
+        }
+
+        # Statement 46 is `There are some sexual acts which are immoral, even
+        # between consenting adults.' Eigenvector 1 should have a negative
+        # component for this.
+        if ($eewhole->[1]->[1]->[46] > 0) {
+            debug('second eig has positive score for sex question, inverting');
+            for (my $j = 0; $j < @{$eewhole->[1]->[1]}; ++$j) {
+                $eewhole->[1]->[1]->[$j] *= -1;
+            }
+        }
+
+        # We don't much care about the other eigenvectors, since they are not
+        # significant.
+
+        my $i;
+        my $f;
+
+        # Save eigenvalues and eigenvectors from whole data set.
+        $f = new IO::File("set-$s-real-eigenvalues", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        $f->print(join("\n", map { $eewhole->[$_]->[0] } (0..NUMEIGS - 1)), "\n");
+        $f->close();
+
+        $f = new IO::File("set-$s-real-eigenvectors", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        for (my $i = 0; $i < NUMEIGS; ++$i) {
+            $f->print(join("\n", @{$eewhole->[$i]->[1]}));
+            $f->print("\n\n\n");
+        }
+        $f->close();
+
+        debug("Saving eigenvectors in database");
+        for ($i = 0; $i < NUMEIGS; ++$i) {
+            PoliticalSurvey::DB::set_eigenvector($dbh, $setid, $i, $eewhole->[$i]->[0], $eewhole->[$i]->[1]);
+        }
+
+        $dbh->commit();
+
+        next if ($saveonly);
+        
+        debug("computing eigenvector relevance with synthetic data");
+
+        my $nsamp;
+        my $bad = NUMEIGS;
+
+        my @ev;
+        my (@mean, @sd);
+
+        $f = new IO::File("set-$s-members", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        $f->print($sets[$s], "\n");
+        $f->close();
+
+        for ($nsamp = 0; $bad > 0; ++$nsamp) {
+            # Generate some more synthetic data if needed.
+            if ($nsamp > $#syn_cov) {
+                push(@syn_cov, PoliticalSurvey::Statistics::compute_covariance_matrix(PoliticalSurvey::Statistics::compute_uncorrelated_results(@{$all_res}, $dists)));
+            }
+            
+            my $ee = PoliticalSurvey::Statistics::compute_eigensystem($syn_cov[$nsamp], $sets[$s]);
+
+            $bad = NUMEIGS;
+            for (my $i = 0; $i < NUMEIGS; ++$i) {
+                push(@{$ev[$i]}, $ee->[$i]->[0]);
+
+                $mean[$i] = mean($ev[$i], @{$ev[$i]});
+                $sd[$i] = sqrt(variance($ev[$i], @{$ev[$i]}));
+
+                my ($dm, $dsd) = (0, 0);
+                if ($nsamp > 2) {
+                    $dm = abs(mean($ev[$i], @{$ev[$i]} - 1) - $mean[$i]) / $mean[$i];
+                    $dsd = abs(sqrt(variance($ev[$i], @{$ev[$i]} - 1)) - $sd[$i]) / $sd[$i];
+                    --$bad unless ($dm > SYNTHMARGIN || $dsd > SYNTHMARGIN);
+                }
+            }
+
+            if ($nsamp > 0 && 0 == ($nsamp % 25)) {
+                debug("nsamp = $nsamp");
+            }
+        }
+
+        # Print real and synthetic eigenvalues.
+        for ($i = 0; $i < NUMEIGS; ++$i) {
+            print "ev $i; real = $eewhole->[$i]->[0], syn = $mean[$i] +/- $sd[$i]\n";
+        }
+
+        # Save the random-sample eigenvalues and their standard deviations.
+        $f = new IO::File("set-$s-random-eigenvalues", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        $f->print(join("\n", map { "$mean[$_] $sd[$_]" } (0..NUMEIGS - 1)), "\n");
+        $f->close();
+
+
+        # Generate partitions of the results and compute their eigenvectors and
+        # eigenvalues. In each case we need to identify the eigenvectors with
+        # those obtained from the whole data set, by computing dot-products.
+        # Elements of @vec are values for that component of the eigenvector,
+        # so we can compute mean and variance easily.
+        my (@val, @vec, @dot);
+
+        $bad = 1;
+        for ($nsamp = 0; $nsamp < 10 || $bad; ++$nsamp) {
+            debug("nsamp = $nsamp");
+            PoliticalSurvey::Statistics::shuffle($norm_res);
+            my @r2 = @$norm_res[0 .. PARTITIONFRAC * @$norm_res - 1];
+            my $cov = PoliticalSurvey::Statistics::compute_covariance_matrix(\@r2);
+            my $ee = PoliticalSurvey::Statistics::compute_eigensystem($cov, $sets[$s]);
+
+            # Now want to identify the eigenvectors here with those in $eewhole.
+            my @vv = ( );
+            my %used = ( );
+
+            $bad = 0;
+            for ($i = 0; $i < 2; ++$i) {    # XXX NUMEIGS
+
+                # Find the eigenvector closest in direction to the $i'th
+                # eigenvector from the complete data set.
+                my ($best, $bestdot) = (0, 0);
+                for (my $j = 0; $j < 2 * NUMEIGS; ++$j) {       # XXX optimisation
+                    next if (exists($used{$j}));
+                    my $d = dot($ee->[$j]->[1], $eewhole->[$i]->[1]);
+                    if (abs($d) > abs($bestdot)) {
+                        $best = $j;
+                        $bestdot = $d;
+                    }
+                }
+                $used{$best} = 1;
+
+                # Record eigenvalue and eigenvector, inverting the vector if the
+                # best dot product was <0.
+                push(@{$val[$i]}, $ee->[$best]->[0]);
+                push(@{$dot[$i]}, abs($bestdot));
+
+                my $sd = 0;
+                if ($nsamp > 2) {
+                    $sd = sqrt(variance($val[$i], scalar(@{$val[$i]})));
+                    ++$bad if ((abs($sd - sqrt(variance($val[$i], scalar(@{$val[$i]}) - 1))) / $sd) > SYNTHMARGIN);
+                }
+                
+                debug("subset EV $best ($ee->[$best]->[0]; " . mean($val[$i], scalar(@{$val[$i]})) . " +/- $sd) to whole EV $i ($eewhole->[$i]->[0]) with dot $bestdot; " . mean($dot[$i], scalar(@{$dot[$i]})) . " +/- " . sqrt(variance($dot[$i], scalar(@{$dot[$i]}))));
+                
+                for (my $j = 0; $j < @{$ee->[0]->[1]}; ++$j) {
+                    next unless defined($ee->[0]->[1]->[$j]);
+                    if ($bestdot < 0) {
+                        push(@{$vec[$i]->[$j]}, -$ee->[$best]->[1]->[$j]);
+                    } else {
+                        push(@{$vec[$i]->[$j]},  $ee->[$best]->[1]->[$j]);
+                    }
+
+                    if ($nsamp > 2 && !$bad) {
+                        $sd = sqrt(variance($vec[$i]->[$j], @{$vec[$i]->[$j]}));
+                        ++$bad if ((abs($sd - sqrt(variance($vec[$i]->[$j], @{$vec[$i]->[$j]} - 1))) / $sd) > SYNTHMARGIN);
+                    }
+                }
+            }
+
+            debug("badness = $bad");
+        }
+
+        # Save dot products, eigenvalues and eigenvectors from subsets.
+        $f = new IO::File("set-$s-subset-dotproducts", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        $f->print(join("\n", map { mean($dot[$_], @{$dot[$_]}) . " " . sqrt(variance($dot[$_], @{$dot[$_]})) } (0..1)), "\n");
+        $f->close();
+        
+        $f = new IO::File("set-$s-subset-eigenvalues", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        $f->print(join("\n", map { mean($val[$_], @{$val[$_]}) . " " . sqrt(variance($val[$_], @{$val[$_]})) } (0..1)), "\n");
+        $f->close();
+
+        $f = new IO::File("set-$s-subset-eigenvectors", O_WRONLY | O_CREAT | O_TRUNC, 0644) or throw Error::Simple($!);
+        for ($i = 0; $i < 2; ++$i) {    # XXX NUMEIGS
+            for (my $j = 0; $j < @{$vec[$i]}; ++$j) {
+                $f->printf("%f %f\n", mean($vec[$i]->[$j], @{$vec[$i]->[$j]}), sqrt(variance($vec[$i]->[$j], @{$vec[$i]->[$j]})));
+            }
+            $f->printf("\n\n\n");
+        }
+        $f->close();
+    }
+} catch Error::Simple with {
+    my $E = shift;
+    STDERR->printf("%s:%d: %s\n", $E->file(), $E->line(), $E->text(), $E->stacktrace());
+    STDERR->print("eigen: failed; aborting\n");
+};
+
+$dbh->disconnect();

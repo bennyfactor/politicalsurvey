@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!--
+    rationale.shtml:
+
+    Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+    Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+
+    $Id: rationale.shtml,v 1.7 2003/11/26 22:31:48 chris Exp $
+
+-->
+<head>
+<!--
+    This non-standard meta tag is necessary to prevent Microsoft Internet
+    Explorer from modifying the page as it is viewed by inserting `smart'
+    links to Microsoft-sponsored content. See
+
+        http://www.microsoft.com/windows/ie/preview/smarttags/default.asp
+
+    for more information.
+-->
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" media="screen" href="/std.css">
+<title>
+    Political Survey: Rationale
+</title>
+</head>
+<body>
+
+<h1>Political Survey: Rationale</h1>
+
+<!--#include virtual="/menu.shtml" -->
+
+<p>politicalcompass.org is a web site which asks a number of opinion questions
+of its visitors, and then places them in a two-dimensional space which is
+supposed to characterise their political views. Unfortunately,
+politicalcompass.org has a poor reputation; in particular, there is a suspicion
+that its questions are designed to make respondents lean towards an
+economically right-wing, socially liberal ("right libertarian") position, and
+the two axes of variation on which results are plotted are opaque in their
+derivation and may not be tremendously relevant.</p>
+
+<p>These suspicions are compounded by the problem that politicalcompass.org's
+methods are not open and, therefore, it is not possible to determine whether
+their selection of questions carries a bias which its operators are using to
+further their own ends.</p>
+
+<p>The purpose of this site is to do a survey of this type properly and openly,
+so that the methods and data in use are open to inspection.</p>
+
+<h2>More detail</h2>
+
+<p>The proper way to do this is to collect a bunch of questions and a bunch of
+answers to them, then take the space defined by all the answers to the
+questions, and construct a spanning basis for it. The natural way to do this is
+with principal components analysis, though as a non-statistician I can't
+comment on whether this is actually the best approach. We should then be able
+to discover -- in terms defined by the answers to the questions set -- the
+significant axes of variation in the data.</p>
+
+<p>This means that <em>all the results we get are defined by the data</em>: we
+do not measure anyone's views according to criteria we set out, but according
+to endogenous criteria. The only points at which our judgment enters the method
+are</p>
+
+<ul>
+<li>when choosing questions (or, rather propositions); and</li>
+<li>when we give context to the results.</li>
+</ul>
+
+<p>The first of those shouldn't matter, if the questions are reasonably
+unbiased and cover a wide enough range of subject materials. The second doesn't
+matter, since it's just a presentational issue.</p>
+
+<p>I'll write a bit more about this later, but for now, here are
+<a href="statsnotes.pdf">some notes about the process</a>.</p>
+
+<h2>Openness</h2>
+
+<p>Openness requires that the source code for the software which runs the site,
+and the data from which the principal axes were computed, be available.
+You can get both from <a href="internals.shtml">the internals page</a>.</p>
+</p>
+
+<!--#include virtual="/tail.shtml" -->

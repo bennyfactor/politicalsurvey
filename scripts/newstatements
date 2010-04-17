@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# newstatements:
+# Put a new list of statements into the database.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: newstatements,v 1.1 2003/07/02 13:45:52 chris Exp $';
+
+use strict;
+
+use DBI;
+use DBD::SQLite;
+use IO::File;
+use PoliticalSurvey;
+
+
+my $dbh = PoliticalSurvey::DB::database()
+    or die "db error: " . DBI::errstr();
+
+print STDERR "deleting... ";
+$dbh->do('delete from statement');
+print STDERR "done.\n";
+
+print STDERR "inserting new statements... ";
+PoliticalSurvey::DB::fill_table_from_csv($dbh, 'insert into statement (id, normal, converse, enabled) values (?, ?, ?, ?)', "../misc/statements.csv", [0, 1, 2, 4]);
+print STDERR "done.\n";
+
+$dbh->commit();
+
+$dbh->disconnect();

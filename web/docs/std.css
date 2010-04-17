@@ -1,0 +1,95 @@
+/*
+ * std.css:
+ * CSS for politics.beasts.org
+ *
+ * As ever, I find myself drinking from the radioactive CSS Kool-Aid. Things
+ * don't get any better, but my expectations have been lowered, so there's a
+ * small chance that this will actually work, insofar as I expect it to.
+ *
+ * $Id: std.css,v 1.5 2003/11/06 20:17:22 chris Exp $
+ *
+ * Copyright (c) 2003 Chris Lightfoot. All Rights Reserved.
+ *
+ */
+
+body {
+    color: black;
+    background-color: white;
+    margin-left: 135px;
+    margin-right: 50pt;
+    margin-top: 55px;
+    background-image: url(/logo.png);
+    background-repeat: no-repeat;
+    line-height: 120%;
+    font-family: sans-serif;
+}
+
+/* Copyright blurb at bottom of page. */
+.smallprint {
+    font-size: small;
+}
+
+/* "Menu" links at top of page. */
+.menu {
+    font-size: small;
+    font-weight: bold;
+}
+
+/* Probably shouldn't put anything in here as it will confuse Netscape */
+table.surveystatements {
+}
+
+td    {
+    border-bottom: 1px solid #eeeeee;
+}
+
+th {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+}
+
+span.rationale {
+    font-size: small;
+    font-style: italic;
+    color: #999999;
+}
+
+/* 
+ * <hr> is a thin grey line which extends across most of the text region.
+ * Naturally this doesn't work in IE, but what can we do? -- or in Netscape,
+ * but nobody expects that to get CSS right anyway....
+ */
+hr {
+    margin-left: 5pt;
+    margin-right: 5pt;
+    border: 0;
+    /* Set both of these for compatibility; cf.
+     * http://www.sovavsiti.cz/css/hr.html */
+    color: silver;
+    background-color: silver;
+    height: 1px;
+}
+
+/*
+ * Links. I like the links which light up and have underlining appear beneath
+ * them, but this doesn't work in Mozilla, which is unable to render the
+ * underline properly. So just have underlined links which change colour when
+ * the pointer is over them.
+ */
+a:link {
+    text-decoration: underline;
+    background-color: transparent;
+    color: #0000a0;
+}
+
+a:visited {
+    text-decoration: underline;
+    background-color: transparent;
+    color: #00007f;
+}
+
+a:hover {
+    text-decoration: underline;
+    background-color: transparent;
+    color: #0000ff;
+}

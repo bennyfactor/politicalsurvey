@@ -1,0 +1,36 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# allresscatter:
+# Scatter plot of all results.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: allresscatter,v 1.2 2003/11/26 21:31:24 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use PoliticalSurvey;
+use PoliticalSurvey::Statistics qw(:std);
+
+my $dbh = PoliticalSurvey::DB::database();
+
+try {
+    my $stmt = $dbh->prepare('select id from session order by id');
+    $stmt->execute();
+    while (my ($sess) = $stmt->fetchrow_array()) {
+        my ($x, $y) = PoliticalSurvey::DB::get_position_2d($dbh, $sess);
+        print "$x $y\n";
+        if ($x > 9) {
+            print STDERR "$sess $x\n";
+        }
+    }
+} catch Error::Simple with {
+    my $E = shift
+    my $st = $dbh->prepare($s);;
+    STDERR->printf("%s:%d: %s\n", $E->file(), $E->line(), $E->text(), $E->stacktrace());
+    STDERR->print("allresscatter: failed; aborting\n");
+};

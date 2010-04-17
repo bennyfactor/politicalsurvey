@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!--
+    index.shtml:
+    Home page for political survey.
+
+    Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+    Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+
+    $Id: index.shtml,v 1.7 2003/11/26 22:31:48 chris Exp $
+
+-->
+<head>
+<!--
+    This non-standard meta tag is necessary to prevent Microsoft Internet
+    Explorer from modifying the page as it is viewed by inserting `smart'
+    links to Microsoft-sponsored content. See
+
+        http://www.microsoft.com/windows/ie/preview/smarttags/default.asp
+
+    for more information.
+-->
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" media="screen" href="/std.css">
+<title>
+    Political Survey
+</title>
+</head>
+<body>
+
+<h1>Political Survey</h1>
+
+<!--#include virtual="menu.shtml" -->
+
+<p>This is an attempt to build an open and unbiased way to measure peoples'
+political outlooks. There's some information on the
+<a href="rationale.shtml">rationale</a> behind the survey, which might be
+of interest.</p>
+
+<p>Alternatively, just <a href="scripts/survey">take the survey</a>.</p>
+
+<h2>News</h2>
+
+<ul>
+<li>26 November, 2003:</br>
+I have set up <a href="internals.shtml">a page</a> from which the code and
+data from the survey can be downloaded.</li>
+<li>18 November, 2003:<br>
+Corrected a small bug in the results script. Some results may change slightly.
+Thanks to Darius Bacon for identifying this problem.</li>
+<li>10 November, 2003:<br>
+<a href="http://cgi.cse.unsw.edu.au/~lambert/cgi-bin/blog/">Tim Lambert</a> is
+operating 
+<a href="http://cgi.cse.unsw.edu.au/~lambert/cgi-bin/blog/surveys/polsurvey.html">a
+web page</a> on which you can record the results you get from this survey.</li>
+<li>9 November, 2003:<br>
+Thanks go to Richard Pond for correcting me on another error in the
+<a href="/scripts/celebrity?celebid=1449698736">supposed answers for Tony
+Benn</a> (regarding his views on Kosovo).</li>
+<li>8 November, 2003:<br>
+Fixed some errors in the
+<a href="/scripts/celebrity?celebid=1449698736">supposed answers for Tony
+Benn</a>, whose position on the scatter plot changes significantly. Apologies
+for this mistake.</li>
+</ul>
+
+<h2>Progress</h2>
+
+<p>We now have over three hundred and fifty results from the survey, and the
+axes on which we intend to plot answers are quite well defined. You can now
+do the survey and see your results, or return to the address you were given
+when you previously completed the survey, to find out where you lie.</p>
+
+<p>You can read some more information about progress up to this point in these
+postings from <a href="http://ex-parrot.com/~chris/wwwitter/">my web log</a>:
+</p>
+<ul>
+<li><a href="http://ex-parrot.com/~chris/wwwitter/20030716-lies_damned_lies_and_politics.html">16 July, 2003: Lies, damned lies, and politics</a></li>
+<li><a href="http://ex-parrot.com/~chris/wwwitter/20030731-a_little_knowledge.html">31 July, 2003: A little knowledge</a></li>
+<li><a href="http://ex-parrot.com/~chris/wwwitter/20030815-yet_more_statistics.html">15 August, 2003: Yet more statistics</a></li>
+</ul>
+
+<p>I'll write a bit more on this later.</p>
+
+<!--#include virtual="tail.shtml" -->

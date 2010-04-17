@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!--
+    credits.shtml:
+    Credits for political survey.
+
+    Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+    Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+
+    $Id: credits.shtml,v 1.4 2003/11/11 17:05:53 chris Exp $
+
+-->
+<head>
+<!--
+    This non-standard meta tag is necessary to prevent Microsoft Internet
+    Explorer from modifying the page as it is viewed by inserting `smart'
+    links to Microsoft-sponsored content. See
+
+        http://www.microsoft.com/windows/ie/preview/smarttags/default.asp
+
+    for more information.
+-->
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" media="screen" href="/std.css">
+<title>
+    Political Survey: Credits
+</title>
+</head>
+<body>
+
+<h1>Political Survey: Credits</h1>
+
+<!--#include virtual="menu.shtml" -->
+
+<p>Many people have assisted me in this project with advice, helpful
+discussion, and useful ideas. Others have advertised this survey and helped
+me assemble enough data to make the results meaningful. To all these people,
+many thanks. They include, in alphabetical order by name,</p>
+
+<ul>
+<li>Alistair Turnbull</li>
+<li><a href="http://www.livejournal.com/users/chiefgnome/">Anthony Wells</a></li>
+<li><a href="http://www.flourish.org/">Francis Irving</a></li>
+<li><a href="http://www.livejournal.com/users/claerwen/">Helen Wright</a></li>
+<li><a href="http://mythic-beasts.com/~mark/">Mark Longair</a></li>
+<li><a href="http://mk.ucant.org/">Martin Keegan</a></li>
+<li><a href="http://www.nickbarlow.com/blog/">Nick Barlow</a></li>
+<li><a href="http://www.xenoclast.org/">Julian Midgley</a></li>
+<li><a href="http://www.goatchurch.org.uk/">Julian Todd</a></li>
+<li><a href="http://cgi.cse.unsw.edu.au/~lambert/cgi-bin/blog/">Tim Lambert</a></li>
+<li><a href="http://fish.cx/">Tom Lynn</a></li>
+</ul>
+
+<p>This site is generously hosted by
+<a href="http://mythic-beasts.com/">Mythic Beasts Ltd.</a> (Though since their
+generosity is in this case directed towards one of the company's founders, you
+might not put it in the same category as others'.)</p>
+
+<p>Others have pointed out errors in <a href="/scripts/celebrity">the supposed
+answers for political "celebrities"</a>. Thanks go to,</p>
+
+<ul>
+<li>Richard Pond</li>
+</ul>
+
+<p>It goes almost without saying, of course, that any errors you may find are
+my responsibility alone.</p>
+
+<p>-- Chris Lightfoot</p>
+
+<!--#include virtual="tail.shtml" -->

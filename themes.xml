@@ -1,0 +1,667 @@
+<?xml version="1.0"?>
+<gmr:Workbook xmlns:gmr="http://www.gnumeric.org/v10.dtd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gnumeric.org/v8.xsd">
+  <gmr:Attributes>
+    <gmr:Attribute>
+      <gmr:name>WorkbookView::show_horizontal_scrollbar</gmr:name>
+      <gmr:type>4</gmr:type>
+      <gmr:value>TRUE</gmr:value>
+    </gmr:Attribute>
+    <gmr:Attribute>
+      <gmr:name>WorkbookView::show_vertical_scrollbar</gmr:name>
+      <gmr:type>4</gmr:type>
+      <gmr:value>TRUE</gmr:value>
+    </gmr:Attribute>
+    <gmr:Attribute>
+      <gmr:name>WorkbookView::show_notebook_tabs</gmr:name>
+      <gmr:type>4</gmr:type>
+      <gmr:value>TRUE</gmr:value>
+    </gmr:Attribute>
+    <gmr:Attribute>
+      <gmr:name>WorkbookView::do_auto_completion</gmr:name>
+      <gmr:type>4</gmr:type>
+      <gmr:value>TRUE</gmr:value>
+    </gmr:Attribute>
+  </gmr:Attributes>
+  <gmr:Summary>
+    <gmr:Item>
+      <gmr:name>application</gmr:name>
+      <gmr:val-string>gnumeric</gmr:val-string>
+    </gmr:Item>
+    <gmr:Item>
+      <gmr:name>author</gmr:name>
+      <gmr:val-string>Chris Lightfoot</gmr:val-string>
+    </gmr:Item>
+  </gmr:Summary>
+  <gmr:SheetNameIndex>
+    <gmr:SheetName>Imported themes-1line</gmr:SheetName>
+  </gmr:SheetNameIndex>
+  <gmr:Names/>
+  <gmr:Geometry Width="1166" Height="746"/>
+  <gmr:Sheets>
+    <gmr:Sheet DisplayFormulas="false" HideZero="false" HideGrid="false" HideColHeader="false" HideRowHeader="false" DisplayOutlines="true" OutlineSymbolsBelow="true" OutlineSymbolsRight="true">
+      <gmr:Name>Imported themes-1line</gmr:Name>
+      <gmr:MaxCol>4</gmr:MaxCol>
+      <gmr:MaxRow>65535</gmr:MaxRow>
+      <gmr:Zoom>1.000000</gmr:Zoom>
+      <gmr:Names/>
+      <gmr:PrintInformation>
+        <gmr:Margins>
+          <gmr:top Points="28.3" PrefUnit="cm"/>
+          <gmr:bottom Points="28.3" PrefUnit="cm"/>
+          <gmr:left Points="28.3" PrefUnit="cm"/>
+          <gmr:right Points="28.3" PrefUnit="cm"/>
+          <gmr:header Points="14.2" PrefUnit="cm"/>
+          <gmr:footer Points="14.2" PrefUnit="cm"/>
+        </gmr:Margins>
+        <gmr:Scale type="percentage" percentage="100"/>
+        <gmr:vcenter value="0"/>
+        <gmr:hcenter value="0"/>
+        <gmr:grid value="0"/>
+        <gmr:even_if_only_styles value="0"/>
+        <gmr:monochrome value="0"/>
+        <gmr:draft value="0"/>
+        <gmr:titles value="0"/>
+        <gmr:repeat_top value=""/>
+        <gmr:repeat_left value=""/>
+        <gmr:order>r_then_d</gmr:order>
+        <gmr:orientation>landscape</gmr:orientation>
+        <gmr:Header Left="" Middle="&amp;[TAB]" Right=""/>
+        <gmr:Footer Left="" Middle="Page &amp;[PAGE]" Right=""/>
+        <gmr:paper>A4</gmr:paper>
+      </gmr:PrintInformation>
+      <gmr:Styles>
+        <gmr:StyleRegion startCol="5" startRow="61" endCol="7" endRow="63">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="64" startRow="256" endCol="255" endRow="4095">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="4" startRow="48" endCol="4" endRow="63">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="4" startRow="32" endCol="7" endRow="47">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="5" startRow="60" endCol="255" endRow="60">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="1" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="4" startRow="16" endCol="4" endRow="31">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="5" startRow="48" endCol="7" endRow="59">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="64" startRow="4096" endCol="255" endRow="65535">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="8" startRow="0" endCol="255" endRow="30">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="4" startRow="0" endCol="7" endRow="15">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="16" startRow="256" endCol="63" endRow="65535">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="5" startRow="31" endCol="255" endRow="31">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="1" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="8" startRow="61" endCol="15" endRow="65535">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="8" startRow="32" endCol="255" endRow="59">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="4" startRow="64" endCol="7" endRow="65535">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="5" startRow="16" endCol="7" endRow="30">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="0" startRow="0" endCol="3" endRow="65535">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="1" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+        <gmr:StyleRegion startCol="16" startRow="61" endCol="255" endRow="255">
+          <gmr:Style HAlign="1" VAlign="2" WrapText="0" Orient="1" Shade="0" Indent="0" Locked="1" Hidden="0" Fore="0:0:0" Back="FFFF:FFFF:FFFF" PatternColor="0:0:0" Format="General">
+            <gmr:Font Unit="9" Bold="0" Italic="0" Underline="0" StrikeThrough="0">Helvetica</gmr:Font>
+            <gmr:StyleBorder>
+              <gmr:Top Style="0"/>
+              <gmr:Bottom Style="0"/>
+              <gmr:Left Style="0"/>
+              <gmr:Right Style="0"/>
+              <gmr:Diagonal Style="0"/>
+              <gmr:Rev-Diagonal Style="0"/>
+            </gmr:StyleBorder>
+          </gmr:Style>
+        </gmr:StyleRegion>
+      </gmr:Styles>
+      <gmr:Cols DefaultSizePts="48">
+        <gmr:ColInfo No="0" Unit="23.2" MarginA="2" MarginB="2" HardSize="1"/>
+        <gmr:ColInfo No="1" Unit="400" MarginA="2" MarginB="2" HardSize="1" Count="2"/>
+        <gmr:ColInfo No="3" Unit="171" MarginA="2" MarginB="2" HardSize="1"/>
+        <gmr:ColInfo No="4" Unit="20.2" MarginA="2" MarginB="2" HardSize="1"/>
+      </gmr:Cols>
+      <gmr:Rows DefaultSizePts="12.8">
+        <gmr:RowInfo No="0" Unit="11.2" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="1" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="2" Unit="21.8" MarginA="0" MarginB="0" Count="3"/>
+        <gmr:RowInfo No="5" Unit="11.2" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="6" Unit="21.8" MarginA="0" MarginB="0" Count="2"/>
+        <gmr:RowInfo No="8" Unit="22.5" MarginA="0" MarginB="0" HardSize="1"/>
+        <gmr:RowInfo No="9" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="10" Unit="11.2" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="11" Unit="21.8" MarginA="0" MarginB="0" Count="3"/>
+        <gmr:RowInfo No="14" Unit="11.2" MarginA="0" MarginB="0" Count="17"/>
+        <gmr:RowInfo No="31" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="32" Unit="11.2" MarginA="0" MarginB="0" Count="6"/>
+        <gmr:RowInfo No="38" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="39" Unit="11.2" MarginA="0" MarginB="0" Count="4"/>
+        <gmr:RowInfo No="43" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="44" Unit="11.2" MarginA="0" MarginB="0" Count="8"/>
+        <gmr:RowInfo No="52" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="53" Unit="11.2" MarginA="0" MarginB="0" Count="9"/>
+        <gmr:RowInfo No="62" Unit="12.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="63" Unit="21.8" MarginA="0" MarginB="0"/>
+        <gmr:RowInfo No="64" Unit="12.8" MarginA="0" MarginB="0" Count="65472"/>
+      </gmr:Rows>
+      <gmr:Selections CursorCol="1" CursorRow="46">
+        <gmr:Selection startCol="1" startRow="46" endCol="1" endRow="46"/>
+      </gmr:Selections>
+      <gmr:Cells>
+        <gmr:Cell Col="0" Row="0" ValueType="30">0</gmr:Cell>
+        <gmr:Cell Col="1" Row="0" ValueType="60">New roads and railways should be built by private companies, not the government.</gmr:Cell>
+        <gmr:Cell Col="2" Row="0" ValueType="60">New roads and railways should be built by the government, not private companies.</gmr:Cell>
+        <gmr:Cell Col="3" Row="0" ValueType="60">economics, state control</gmr:Cell>
+        <gmr:Cell Col="4" Row="0" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="1" ExprID="1">=A1+1</gmr:Cell>
+        <gmr:Cell Col="1" Row="1" ValueType="60">Services like health care, education and social security should be provided by the government, not by private enterprise.</gmr:Cell>
+        <gmr:Cell Col="2" Row="1" ValueType="60">Services like health care, education and social security should be provided by private enterprise, not by the government.</gmr:Cell>
+        <gmr:Cell Col="3" Row="1" ValueType="60">economics, state control</gmr:Cell>
+        <gmr:Cell Col="4" Row="1" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="2" ExprID="1"/>
+        <gmr:Cell Col="1" Row="2" ValueType="60">Sometimes interest rates should be raised to reduce inflation, even if doing so would cause a large number of job losses.</gmr:Cell>
+        <gmr:Cell Col="2" Row="2" ValueType="60">It's not worth raising interest rates to reduce inflation if this would result in the loss of large numbers of jobs.</gmr:Cell>
+        <gmr:Cell Col="3" Row="2" ValueType="60">economics, importance of inflation</gmr:Cell>
+        <gmr:Cell Col="4" Row="2" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="3" ExprID="1"/>
+        <gmr:Cell Col="1" Row="3" ValueType="60">Drivers should pay enough tax to cover the cost of environmental damage caused by motor transport, even if that would price some people off the roads.</gmr:Cell>
+        <gmr:Cell Col="2" Row="3" ValueType="60">Drivers shouldn't have to pay taxes to cover damage to the environment caused by motor transport, since that would price some people off the roads.</gmr:Cell>
+        <gmr:Cell Col="3" Row="3" ValueType="60">economics, externalities</gmr:Cell>
+        <gmr:Cell Col="4" Row="3" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="4" ExprID="1"/>
+        <gmr:Cell Col="1" Row="4" ValueType="60">The wealthy should pay a larger proportion of their income in tax than the poor.</gmr:Cell>
+        <gmr:Cell Col="2" Row="4" ValueType="60">The wealthy shouldn't pay a larger proportion of their income in tax than the poor.</gmr:Cell>
+        <gmr:Cell Col="3" Row="4" ValueType="60">economics, taxation, progressive/regressive</gmr:Cell>
+        <gmr:Cell Col="4" Row="4" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="5" ExprID="1"/>
+        <gmr:Cell Col="1" Row="5" ValueType="60">The government should raise revenue by taxing consumption rather than income.</gmr:Cell>
+        <gmr:Cell Col="2" Row="5" ValueType="60">The government should raise revenue by taxing income rather than consumption.</gmr:Cell>
+        <gmr:Cell Col="3" Row="5" ValueType="60">economics, taxation, direct/indirect</gmr:Cell>
+        <gmr:Cell Col="4" Row="5" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="6" ExprID="1"/>
+        <gmr:Cell Col="1" Row="6" ValueType="60">Overall, economic migrants bring benefits to our country.</gmr:Cell>
+        <gmr:Cell Col="2" Row="6" ValueType="60">Overall, economic migrants are a drain on our country.</gmr:Cell>
+        <gmr:Cell Col="3" Row="6" ValueType="60">economics, open borders; society, multiculturalism</gmr:Cell>
+        <gmr:Cell Col="4" Row="6" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="7" ExprID="1"/>
+        <gmr:Cell Col="1" Row="7" ValueType="60">The government should subsidise farmers so that they stay in business, even if it would be cheaper to buy food from abroad.</gmr:Cell>
+        <gmr:Cell Col="2" Row="7" ValueType="60">There's no need to subsidise farmers if we can buy food more cheaply from abroad, even if that meant they went out of business.</gmr:Cell>
+        <gmr:Cell Col="3" Row="7" ValueType="60">economics, protectionism; society, importance of farming</gmr:Cell>
+        <gmr:Cell Col="4" Row="7" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="8" ExprID="1"/>
+        <gmr:Cell Col="1" Row="8" ValueType="60">Smokers should be required to kick the habit before receiving medical care for smoking-related illnesses.</gmr:Cell>
+        <gmr:Cell Col="2" Row="8" ValueType="60">Smokers should be able to receive medical care for smoking-related illnesses even if they still smoke.</gmr:Cell>
+        <gmr:Cell Col="3" Row="8" ValueType="60">society, personal responsibility</gmr:Cell>
+        <gmr:Cell Col="4" Row="8" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="9" ExprID="1"/>
+        <gmr:Cell Col="1" Row="9" ValueType="60">Everyone bears a moral responsibility for the actions of their government, even when they do not support them.</gmr:Cell>
+        <gmr:Cell Col="2" Row="9" ValueType="60">Nobody bears a moral responsibility for actions of their government if they don't support them.</gmr:Cell>
+        <gmr:Cell Col="3" Row="9" ValueType="60">society, collective responsibility</gmr:Cell>
+        <gmr:Cell Col="4" Row="9" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="10" ExprID="1"/>
+        <gmr:Cell Col="1" Row="10" ValueType="60">Anybody who wants top-quality health care should expect to have to pay for it.</gmr:Cell>
+        <gmr:Cell Col="2" Row="10" ValueType="60">Everybody has a right to top-quality health care, even if they aren't wealthy.</gmr:Cell>
+        <gmr:Cell Col="3" Row="10" ValueType="60">society, access to health care</gmr:Cell>
+        <gmr:Cell Col="4" Row="10" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="11" ExprID="1"/>
+        <gmr:Cell Col="1" Row="11" ValueType="60">The mix of minorities in public institutions should reflect their numbers in the general population.</gmr:Cell>
+        <gmr:Cell Col="2" Row="11" ValueType="60">It doesn't matter whether the mix of minorities in public institutions reflects their numbers in the general population.</gmr:Cell>
+        <gmr:Cell Col="3" Row="11" ValueType="60">society, affirmative action</gmr:Cell>
+        <gmr:Cell Col="4" Row="11" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="12" ExprID="1"/>
+        <gmr:Cell Col="1" Row="12" ValueType="60">Having individual local representatives is more important than electing parties in exact proportion to their support.</gmr:Cell>
+        <gmr:Cell Col="2" Row="12" ValueType="60">It's more important that we elect parties in exact proportion to their support than that we each have individual local representatives.</gmr:Cell>
+        <gmr:Cell Col="3" Row="12" ValueType="60">society, proportional representation</gmr:Cell>
+        <gmr:Cell Col="4" Row="12" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="13" ExprID="1"/>
+        <gmr:Cell Col="1" Row="13" ValueType="60">Officials like public prosecutors should be directly elected rather than chosen by the government.</gmr:Cell>
+        <gmr:Cell Col="2" Row="13" ValueType="60">Officials like public prosecutors should be chosen by the government, not directly elected.</gmr:Cell>
+        <gmr:Cell Col="3" Row="13" ValueType="60">society, technocracy/local democracy</gmr:Cell>
+        <gmr:Cell Col="4" Row="13" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="14" ExprID="1"/>
+        <gmr:Cell Col="1" Row="14" ValueType="60">For society to be cohesive, it is important that everyone shares a common language.</gmr:Cell>
+        <gmr:Cell Col="2" Row="14" ValueType="60">A common language is not necessary for a cohesive society.</gmr:Cell>
+        <gmr:Cell Col="3" Row="14" ValueType="60">society, multiculturalism</gmr:Cell>
+        <gmr:Cell Col="4" Row="14" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="15" ExprID="1"/>
+        <gmr:Cell Col="1" Row="15" ValueType="60">Legal protection for free expression creates more trouble than it's worth.</gmr:Cell>
+        <gmr:Cell Col="2" Row="15" ValueType="60">We should maintain the right to free expression, even if some people use it to create trouble.</gmr:Cell>
+        <gmr:Cell Col="3" Row="15" ValueType="60">society, fundamental rights</gmr:Cell>
+        <gmr:Cell Col="4" Row="15" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="16" ExprID="1"/>
+        <gmr:Cell Col="1" Row="16" ValueType="60">Nobody should go hungry, even if they refuse to work.</gmr:Cell>
+        <gmr:Cell Col="2" Row="16" ValueType="60">People who refuse to work should run the risk of going hungry.</gmr:Cell>
+        <gmr:Cell Col="3" Row="16" ValueType="60">society, the welfare state</gmr:Cell>
+        <gmr:Cell Col="4" Row="16" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="17" ExprID="1"/>
+        <gmr:Cell Col="1" Row="17" ValueType="60">Some art should receive government funding.</gmr:Cell>
+        <gmr:Cell Col="2" Row="17" ValueType="60">Art shouldn't receive government funding.</gmr:Cell>
+        <gmr:Cell Col="3" Row="17" ValueType="60">society, culture</gmr:Cell>
+        <gmr:Cell Col="4" Row="17" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="18" ExprID="1"/>
+        <gmr:Cell Col="1" Row="18" ValueType="60">Our nation has a glorious history.</gmr:Cell>
+        <gmr:Cell Col="2" Row="18" ValueType="60">Our nation's history is not particularly glorious.</gmr:Cell>
+        <gmr:Cell Col="3" Row="18" ValueType="60">society, national character</gmr:Cell>
+        <gmr:Cell Col="4" Row="18" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="19" ExprID="1"/>
+        <gmr:Cell Col="1" Row="19" ValueType="60">A person's social status shouldn't depend on who their parents are.</gmr:Cell>
+        <gmr:Cell Col="2" Row="19" ValueType="60">A person's social status should depend on who their parents are.</gmr:Cell>
+        <gmr:Cell Col="3" Row="19" ValueType="60">society, class</gmr:Cell>
+        <gmr:Cell Col="4" Row="19" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="20" ExprID="1"/>
+        <gmr:Cell Col="1" Row="20" ValueType="60">We should offer sanctuary to anybody fleeing persecution.</gmr:Cell>
+        <gmr:Cell Col="2" Row="20" ValueType="60">We can't offer sanctuary to everyone who is fleeing persecution.</gmr:Cell>
+        <gmr:Cell Col="3" Row="20" ValueType="60">society, asylum seekers</gmr:Cell>
+        <gmr:Cell Col="4" Row="20" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="21" ExprID="1"/>
+        <gmr:Cell Col="1" Row="21" ValueType="60">There are some ethnic groups who can never be fully integrated into our society.</gmr:Cell>
+        <gmr:Cell Col="2" Row="21" ValueType="60">People of any ethnic group can be fully integrated into our society.</gmr:Cell>
+        <gmr:Cell Col="3" Row="21" ValueType="60">society, racism</gmr:Cell>
+        <gmr:Cell Col="4" Row="21" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="22" ExprID="1"/>
+        <gmr:Cell Col="1" Row="22" ValueType="60">Everyone should stand up for the National Anthem.</gmr:Cell>
+        <gmr:Cell Col="2" Row="22" ValueType="60">There is no reason to stand up for the National Anthem.</gmr:Cell>
+        <gmr:Cell Col="3" Row="22" ValueType="60">society, patriotism</gmr:Cell>
+        <gmr:Cell Col="4" Row="22" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="23" ExprID="1"/>
+        <gmr:Cell Col="1" Row="23" ValueType="60">Class distinctions should exist.</gmr:Cell>
+        <gmr:Cell Col="2" Row="23" ValueType="60">Class distinctions should not exist.</gmr:Cell>
+        <gmr:Cell Col="3" Row="23" ValueType="60">society, class</gmr:Cell>
+        <gmr:Cell Col="4" Row="23" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="24" ExprID="1"/>
+        <gmr:Cell Col="1" Row="24" ValueType="60">To protect society from drug abuse, narcotics must be banned.</gmr:Cell>
+        <gmr:Cell Col="2" Row="24" ValueType="60">It is not necessary to ban narcotics to protect society from drug abuse.</gmr:Cell>
+        <gmr:Cell Col="3" Row="24" ValueType="60">society, prohibition</gmr:Cell>
+        <gmr:Cell Col="4" Row="24" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="25" ExprID="1"/>
+        <gmr:Cell Col="1" Row="25" ValueType="60">Alcohol is a more dangerous drug than marijuana.</gmr:Cell>
+        <gmr:Cell Col="2" Row="25" ValueType="60">Marijuana is a more dangerous drug than alcohol.</gmr:Cell>
+        <gmr:Cell Col="3" Row="25" ValueType="60">society, drugs</gmr:Cell>
+        <gmr:Cell Col="4" Row="25" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="26" ExprID="1"/>
+        <gmr:Cell Col="1" Row="26" ValueType="60">Shared religious beliefs should be an important part of our society.</gmr:Cell>
+        <gmr:Cell Col="2" Row="26" ValueType="60">Shared religious belief isn't an important part of our society.</gmr:Cell>
+        <gmr:Cell Col="3" Row="26" ValueType="60">society, religion</gmr:Cell>
+        <gmr:Cell Col="4" Row="26" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="27" ExprID="1"/>
+        <gmr:Cell Col="1" Row="27" ValueType="60">Family is more important than society.</gmr:Cell>
+        <gmr:Cell Col="2" Row="27" ValueType="60">Society is more important than family.</gmr:Cell>
+        <gmr:Cell Col="3" Row="27" ValueType="60">society, family</gmr:Cell>
+        <gmr:Cell Col="4" Row="27" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="28" ExprID="1"/>
+        <gmr:Cell Col="1" Row="28" ValueType="60">Sometimes the only way to make a legitimate point of view heard is to break the law.</gmr:Cell>
+        <gmr:Cell Col="2" Row="28" ValueType="60">It is never necessary to break the law to make a legitimate point of view heard.</gmr:Cell>
+        <gmr:Cell Col="3" Row="28" ValueType="60">society, protest</gmr:Cell>
+        <gmr:Cell Col="4" Row="28" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="29" ExprID="1"/>
+        <gmr:Cell Col="1" Row="29" ValueType="60">Our society needs more lawyers.</gmr:Cell>
+        <gmr:Cell Col="2" Row="29" ValueType="60">Our society doesn't need any more lawyers.</gmr:Cell>
+        <gmr:Cell Col="3" Row="29" ValueType="60">society, importance of qualified experts</gmr:Cell>
+        <gmr:Cell Col="4" Row="29" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="30" ExprID="1"/>
+        <gmr:Cell Col="1" Row="30" ValueType="60">Some crimes are so serious that the only proper punishment is the death penalty.</gmr:Cell>
+        <gmr:Cell Col="2" Row="30" ValueType="60">No crime, however serious, should be punished by death.</gmr:Cell>
+        <gmr:Cell Col="3" Row="30" ValueType="60">justice, death penalty</gmr:Cell>
+        <gmr:Cell Col="4" Row="30" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="31" ExprID="1"/>
+        <gmr:Cell Col="1" Row="31" ValueType="60">Dealing with nuisance crimes like petty vandlism makes serious crime less likely.</gmr:Cell>
+        <gmr:Cell Col="2" Row="31" ValueType="60">Dealing with nuisance crimes like petty vandlism doesn't make serious crime less likely.</gmr:Cell>
+        <gmr:Cell Col="3" Row="31" ValueType="60">justice, zero tolerance</gmr:Cell>
+        <gmr:Cell Col="4" Row="31" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="32" ExprID="1"/>
+        <gmr:Cell Col="1" Row="32" ValueType="60">Everyone should have the right to trial by jury.</gmr:Cell>
+        <gmr:Cell Col="2" Row="32" ValueType="60">Trial by jury shouldn't always be available by right.</gmr:Cell>
+        <gmr:Cell Col="3" Row="32" ValueType="60">justice, jury trial</gmr:Cell>
+        <gmr:Cell Col="4" Row="32" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="33" ExprID="1"/>
+        <gmr:Cell Col="1" Row="33" ValueType="60">It's more important to rehabilitate criminals than to punish them.</gmr:Cell>
+        <gmr:Cell Col="2" Row="33" ValueType="60">It's more important to punish criminals than to rehabilitate them.</gmr:Cell>
+        <gmr:Cell Col="3" Row="33" ValueType="60">justice, rehabilitation</gmr:Cell>
+        <gmr:Cell Col="4" Row="33" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="34" ExprID="1"/>
+        <gmr:Cell Col="1" Row="34" ValueType="60">It is only acceptable to use proportionate force to defend your property from criminals.</gmr:Cell>
+        <gmr:Cell Col="2" Row="34" ValueType="60">It is acceptable to use any amount of force to defend your property from criminals.</gmr:Cell>
+        <gmr:Cell Col="3" Row="34" ValueType="60">justice, vigilanteism</gmr:Cell>
+        <gmr:Cell Col="4" Row="34" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="35" ExprID="1"/>
+        <gmr:Cell Col="1" Row="35" ValueType="60">Members of our society should be familiar with the history and traditions of our culture.</gmr:Cell>
+        <gmr:Cell Col="2" Row="35" ValueType="60">Members of society needn't be familiar with the history and traditions of our culture.</gmr:Cell>
+        <gmr:Cell Col="3" Row="35" ValueType="60">education, tradition</gmr:Cell>
+        <gmr:Cell Col="4" Row="35" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="36" ExprID="1"/>
+        <gmr:Cell Col="1" Row="36" ValueType="60">Overall, young people benefit from compulsory military service.</gmr:Cell>
+        <gmr:Cell Col="2" Row="36" ValueType="60">Overall, young people don't benefit from compulsory military service.</gmr:Cell>
+        <gmr:Cell Col="3" Row="36" ValueType="60">education, national service</gmr:Cell>
+        <gmr:Cell Col="4" Row="36" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="37" ExprID="1"/>
+        <gmr:Cell Col="1" Row="37" ValueType="60">Schools should concentrate on training people for the workforce.</gmr:Cell>
+        <gmr:Cell Col="2" Row="37" ValueType="60">Schools should do much more than just training people for the workforce.</gmr:Cell>
+        <gmr:Cell Col="3" Row="37" ValueType="60">education, vocational</gmr:Cell>
+        <gmr:Cell Col="4" Row="37" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="38" ExprID="1"/>
+        <gmr:Cell Col="1" Row="38" ValueType="60">Schools should not teach children anything which contradicts their parents' religious faith.</gmr:Cell>
+        <gmr:Cell Col="2" Row="38" ValueType="60">Sometimes schools should teach children things which contradict their parents' religious faith.</gmr:Cell>
+        <gmr:Cell Col="3" Row="38" ValueType="60">education, importance of religion</gmr:Cell>
+        <gmr:Cell Col="4" Row="38" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="39" ExprID="1"/>
+        <gmr:Cell Col="1" Row="39" ValueType="60">Some people should not have access to the Internet.</gmr:Cell>
+        <gmr:Cell Col="2" Row="39" ValueType="60">Everyone should have access to the Internet.</gmr:Cell>
+        <gmr:Cell Col="3" Row="39" ValueType="60">education, access</gmr:Cell>
+        <gmr:Cell Col="4" Row="39" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="40" ExprID="1"/>
+        <gmr:Cell Col="1" Row="40" ValueType="60">Correct grammar is important.</gmr:Cell>
+        <gmr:Cell Col="2" Row="40" ValueType="60">Correct grammar doesn't matter.</gmr:Cell>
+        <gmr:Cell Col="3" Row="40" ValueType="60">education, traditional values</gmr:Cell>
+        <gmr:Cell Col="4" Row="40" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="41" ExprID="1"/>
+        <gmr:Cell Col="1" Row="41" ValueType="60">Scientists bear no moral responsibility for how their discoveries are used.</gmr:Cell>
+        <gmr:Cell Col="2" Row="41" ValueType="60">Scientists bear a moral responsibility for how their discoveries are used.</gmr:Cell>
+        <gmr:Cell Col="3" Row="41" ValueType="60">morality, the Feynman question</gmr:Cell>
+        <gmr:Cell Col="4" Row="41" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="42" ExprID="1"/>
+        <gmr:Cell Col="1" Row="42" ValueType="60">Some technologies should never be used, whatever their benefits.</gmr:Cell>
+        <gmr:Cell Col="2" Row="42" ValueType="60">We should make use of any technology, if it benefits us.</gmr:Cell>
+        <gmr:Cell Col="3" Row="42" ValueType="60">morality, applications of technology</gmr:Cell>
+        <gmr:Cell Col="4" Row="42" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="43" ExprID="1"/>
+        <gmr:Cell Col="1" Row="43" ValueType="60">Some medical research would require so many animal experiments that it should not be done, whatever the benefits.</gmr:Cell>
+        <gmr:Cell Col="2" Row="43" ValueType="60">Beneficial medical research should always go ahead, however many animal experiments would be performed</gmr:Cell>
+        <gmr:Cell Col="3" Row="43" ValueType="60">morality, animal experiments</gmr:Cell>
+        <gmr:Cell Col="4" Row="43" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="44" ExprID="1"/>
+        <gmr:Cell Col="1" Row="44" ValueType="60">Religious faith should be based on the literal word of God.</gmr:Cell>
+        <gmr:Cell Col="2" Row="44" ValueType="60">Religious faith needn't be based on the literal word of God.</gmr:Cell>
+        <gmr:Cell Col="3" Row="44" ValueType="60">religion, evangelicism/scirtural literalism</gmr:Cell>
+        <gmr:Cell Col="4" Row="44" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="45" ExprID="1"/>
+        <gmr:Cell Col="1" Row="45" ValueType="60">There is a place for organised religion in government.</gmr:Cell>
+        <gmr:Cell Col="2" Row="45" ValueType="60">There is no place for organised religion in government.</gmr:Cell>
+        <gmr:Cell Col="3" Row="45" ValueType="60">religion, state</gmr:Cell>
+        <gmr:Cell Col="4" Row="45" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="46" ExprID="1"/>
+        <gmr:Cell Col="1" Row="46" ValueType="60">There are some sexual acts which are immoral, even between consenting adults.</gmr:Cell>
+        <gmr:Cell Col="2" Row="46" ValueType="60">There is no such thing as an immoral sexual act between consenting adults.</gmr:Cell>
+        <gmr:Cell Col="3" Row="46" ValueType="60">morality, sex and consent</gmr:Cell>
+        <gmr:Cell Col="4" Row="46" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="47" ExprID="1"/>
+        <gmr:Cell Col="1" Row="47" ValueType="60">It is immoral to be lazy.</gmr:Cell>
+        <gmr:Cell Col="2" Row="47" ValueType="60">Laziness is not immoral.</gmr:Cell>
+        <gmr:Cell Col="3" Row="47" ValueType="60">morality, work ethic</gmr:Cell>
+        <gmr:Cell Col="4" Row="47" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="48" ExprID="1"/>
+        <gmr:Cell Col="1" Row="48" ValueType="60">It is never moral to break the law.</gmr:Cell>
+        <gmr:Cell Col="2" Row="48" ValueType="60">Breaking the law is not always immoral.</gmr:Cell>
+        <gmr:Cell Col="3" Row="48" ValueType="60">morality, legality</gmr:Cell>
+        <gmr:Cell Col="4" Row="48" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="49" ExprID="1"/>
+        <gmr:Cell Col="1" Row="49" ValueType="60">No woman should be allowed to have an abortion, whatever the circumstances.</gmr:Cell>
+        <gmr:Cell Col="2" Row="49" ValueType="60">Abortion is acceptable in some cases.</gmr:Cell>
+        <gmr:Cell Col="3" Row="49" ValueType="60">morality, abortion</gmr:Cell>
+        <gmr:Cell Col="4" Row="49" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="50" ExprID="1"/>
+        <gmr:Cell Col="1" Row="50" ValueType="60">National law should always override international agreements.</gmr:Cell>
+        <gmr:Cell Col="2" Row="50" ValueType="60">Sometimes international agreements should override national law.</gmr:Cell>
+        <gmr:Cell Col="3" Row="50" ValueType="60">international, multilateralism</gmr:Cell>
+        <gmr:Cell Col="4" Row="50" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="51" ExprID="1"/>
+        <gmr:Cell Col="1" Row="51" ValueType="60">Sometimes civilians are a legitimate military target.</gmr:Cell>
+        <gmr:Cell Col="2" Row="51" ValueType="60">Civilians are never a legitimate military target.</gmr:Cell>
+        <gmr:Cell Col="3" Row="51" ValueType="60">international, laws of war</gmr:Cell>
+        <gmr:Cell Col="4" Row="51" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="52" ExprID="1"/>
+        <gmr:Cell Col="1" Row="52" ValueType="60">The people of this country have a very different character to those of our neighbours.</gmr:Cell>
+        <gmr:Cell Col="2" Row="52" ValueType="60">Fundamentally, the people of this country have the same character as those of our neighbours.</gmr:Cell>
+        <gmr:Cell Col="3" Row="52" ValueType="60">international, national character</gmr:Cell>
+        <gmr:Cell Col="4" Row="52" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="53" ExprID="1"/>
+        <gmr:Cell Col="1" Row="53" ValueType="60">Aid projects abroad should always be funded by charities, not the taxpayer.</gmr:Cell>
+        <gmr:Cell Col="2" Row="53" ValueType="60">Some overseas aid projects should be funded by the taxpayer, and can't be left to charities.</gmr:Cell>
+        <gmr:Cell Col="3" Row="53" ValueType="60">international, government foreign aid</gmr:Cell>
+        <gmr:Cell Col="4" Row="53" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="54" ExprID="1"/>
+        <gmr:Cell Col="1" Row="54" ValueType="60">It's acceptable for a businessman to bribe a foreign official to complete a sale.</gmr:Cell>
+        <gmr:Cell Col="2" Row="54" ValueType="60">It's unacceptable for a businessman to bribe a foreign official to complete a sale.</gmr:Cell>
+        <gmr:Cell Col="3" Row="54" ValueType="60">international, moral relativism</gmr:Cell>
+        <gmr:Cell Col="4" Row="54" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="55" ExprID="1"/>
+        <gmr:Cell Col="1" Row="55" ValueType="60">Our armed forces should intervene to stop genocide in other countries.</gmr:Cell>
+        <gmr:Cell Col="2" Row="55" ValueType="60">Our armed forces shouldn't intervene in other countries, even to stop genocide.</gmr:Cell>
+        <gmr:Cell Col="3" Row="55" ValueType="60">international, armed intervention</gmr:Cell>
+        <gmr:Cell Col="4" Row="55" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="56" ExprID="1"/>
+        <gmr:Cell Col="1" Row="56" ValueType="60">Our sense of right and wrong comes from religious faith.</gmr:Cell>
+        <gmr:Cell Col="2" Row="56" ValueType="60">We don't need religious faith to have a sense of right and wrong.</gmr:Cell>
+        <gmr:Cell Col="3" Row="56" ValueType="60">religion, morality</gmr:Cell>
+        <gmr:Cell Col="4" Row="56" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="57" ExprID="1"/>
+        <gmr:Cell Col="1" Row="57" ValueType="60">Children should always obey their parents.</gmr:Cell>
+        <gmr:Cell Col="2" Row="57" ValueType="60">Sometimes children shouldn't obey their parents.</gmr:Cell>
+        <gmr:Cell Col="3" Row="57" ValueType="60">morality, family obedience</gmr:Cell>
+        <gmr:Cell Col="4" Row="57" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="58" ExprID="1"/>
+        <gmr:Cell Col="1" Row="58" ValueType="60">In the right circumstances, cutting taxes can increase government revenue.</gmr:Cell>
+        <gmr:Cell Col="2" Row="58" ValueType="60">Cutting taxes can't ever increase government revenue.</gmr:Cell>
+        <gmr:Cell Col="3" Row="58" ValueType="60">economics, Laffer curve</gmr:Cell>
+        <gmr:Cell Col="4" Row="58" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="59" ExprID="1"/>
+        <gmr:Cell Col="1" Row="59" ValueType="60">Economic globalisation will increase inequality.</gmr:Cell>
+        <gmr:Cell Col="2" Row="59" ValueType="60">Economic globalisation will decrease inequality.</gmr:Cell>
+        <gmr:Cell Col="3" Row="59" ValueType="60">economics, free trade</gmr:Cell>
+        <gmr:Cell Col="4" Row="59" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="60" ExprID="1"/>
+        <gmr:Cell Col="1" Row="60" ValueType="60">It's more important to make the poor richer than to decrease the gap between rich and poor.</gmr:Cell>
+        <gmr:Cell Col="2" Row="60" ValueType="60">It's more important to decrease the gap between rich and poor than to make the poor richer.</gmr:Cell>
+        <gmr:Cell Col="3" Row="60" ValueType="60">economics, perception of disparity</gmr:Cell>
+        <gmr:Cell Col="4" Row="60" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="61" ExprID="1"/>
+        <gmr:Cell Col="1" Row="61" ValueType="60">There is a danger that some large corporations will become more powerful than governments.</gmr:Cell>
+        <gmr:Cell Col="2" Row="61" ValueType="60">Governments will always be more powerful than large corporations.</gmr:Cell>
+        <gmr:Cell Col="3" Row="61" ValueType="60">economics, power of corporations</gmr:Cell>
+        <gmr:Cell Col="4" Row="61" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="62" ExprID="1"/>
+        <gmr:Cell Col="1" Row="62" ValueType="60">Aggressive foreign policies can put a stop to international terrorism</gmr:Cell>
+        <gmr:Cell Col="2" Row="62" ValueType="60">Aggressive foreign policies will not put a stop to international terrorism.</gmr:Cell>
+        <gmr:Cell Col="3" Row="62" ValueType="60">international, war on terror</gmr:Cell>
+        <gmr:Cell Col="4" Row="62" ValueType="30">1</gmr:Cell>
+        <gmr:Cell Col="0" Row="63" ExprID="1"/>
+        <gmr:Cell Col="1" Row="63" ValueType="60">Drug abuse is a problem primarily because of its effects on drug users, not its effects on the rest of society.</gmr:Cell>
+        <gmr:Cell Col="2" Row="63" ValueType="60">Drug abuse is a problem primarily because of its effects on society, not its effects on drug users alone.</gmr:Cell>
+        <gmr:Cell Col="3" Row="63" ValueType="60">society, drugs</gmr:Cell>
+        <gmr:Cell Col="4" Row="63" ValueType="30">1</gmr:Cell>
+      </gmr:Cells>
+      <gmr:SheetLayout TopLeft="A15"/>
+      <gmr:Solver TargetCol="-1" TargetRow="-1" ProblemType="1" Inputs=""/>
+    </gmr:Sheet>
+  </gmr:Sheets>
+  <gmr:UIData SelectedTab="0"/>
+</gmr:Workbook>

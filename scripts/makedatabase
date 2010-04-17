@@ -1,0 +1,234 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# makedatabase:
+# Create the database for the political survey.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: makedatabase,v 1.10 2003/11/06 20:17:22 chris Exp $';
+
+use strict;
+
+use DBI;
+use DBD::SQLite;
+use IO::File;
+use PoliticalSurvey;
+
+my $filename = $ARGV[0];
+
+my $dbh = PoliticalSurvey::DB::database()
+    or die "db error: " . DBI::errstr();
+
+# Table of statements. Each statement has an ID, normal and converse text,
+# and a flag saying whether it's enabled or not.
+print STDERR "statements... ";
+
+$dbh->do(q{
+    create table statement (
+        id integer not null primary key,
+        normal text not null,
+        converse text not null,
+        enabled boolean not null
+    )});
+
+PoliticalSurvey::DB::fill_table_from_csv($dbh, 'insert into statement (id, normal, converse, enabled) values (?, ?, ?, ?)', "../misc/statements.csv", [0, 1, 2, 4]);
+
+print STDERR "done.\n";
+
+# Table of countries.
+print STDERR "countries... ";
+
+$dbh->do(q{
+    create table country (
+        code text not null primary key,
+        name text not null
+    )});
+
+PoliticalSurvey::DB::fill_table_from_csv($dbh, 'insert into country (code, name) values (?, ?)', "../misc/countries.csv", [1, 0]);
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+# Table of IP address -> country mapping.
+print STDERR "ipcountry... ";
+
+$dbh->do(q{
+    create table ipcountry (
+        iplo integer not null primary key,
+        iphi integer not null,
+        code text not null
+    )});
+
+PoliticalSurvey::DB::fill_table_from_csv($dbh, 'insert into ipcountry (iplo, iphi, code) values (?, ?, ?)', "../misc/ip-to-country.csv", [0, 1, 2]);
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+# Tables of results.
+print STDERR "session, answer... ";
+
+$dbh->do(q{
+    create table session (
+        id integer not null primary key,
+        ipfrom text not null,
+        country text null,
+        timewhen integer
+    )});
+
+$dbh->do(q{
+    create table answer (
+        sessionid integer not null,  -- references session.id,
+        statementid integer not null, -- references statement.id,
+        converse boolean not null,
+        value integer not null,
+        primary key (sessionid, statementid, converse)
+    )});
+
+$dbh->do('create index answer_session_idx on answer(sessionid)');
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+#
+# Statistics.
+#
+
+# Distribution of answers to each question.
+print STDERR "distribution... ";
+
+$dbh->do(q{
+    create table distribution (
+        statementid integer not null,   -- references statement.id
+        converse boolean not null,
+        until integer not null, -- time calculation was done
+        -- numbers of results falling in the five categories; ugly
+        nm2 integer not null,
+        nm1 integer not null,
+        n0  integer not null,
+        np1 integer not null,
+        np2 integer not null,
+        primary key(statementid, converse)
+    )});
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+# Covariance between normal and converse forms of each question.
+print STDERR "selfcovariance... ";
+
+# cov(x, y) = mean(x * y) - mean(x) * mean(y). x is forward results, y is
+# converse results. Also store mean(x * x) and mean(y * y) so that we can do
+# variances. This also enables us to find the best-fitting line, given by
+# y = a + b * x where b = cov(x, y) / var(x) and a = mean(y) - b * mean(x).
+# Note that the sumxy etc. are *not* the ssxy etc. of MathWorld.
+$dbh->do(q{
+    create table selfcovariance (
+        statementid integer not null primary key, -- references statement.id
+        until integer not null,     -- time calculation was done
+        numpts integer not null,    -- number of points used
+        sumxy real not null,        -- sum of x * y
+        sumxx real not null,        -- sum of x * x
+        sumyy real not null,        -- sum of y * y
+        sumx real not null,         -- sum of x
+        sumy real not null          -- sum of y
+    )});
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+# Covariance between pairs of questions. This is done in terms of the normal
+# results, with converse results being mapped onto forward results using the
+# best-fit line.
+print STDERR "covariance... ";
+
+$dbh->do(q{
+    create table covariance (
+        i integer not null,         -- first statement id
+        j integer not null,         -- second
+        until integer not null,     -- time calculation was done
+        numpts integer not null,    -- number of points used
+        sumxy real not null,        -- sum of x * y
+        sumxx real not null,        -- sum of x * x
+        sumyy real not null,        -- sum of y * y
+        sumx real not null,         -- sum of x
+        sumy real not null,         -- sum of y
+        primary key(i, j)
+    )});
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+# Distinct sets of questions for which we compute results. The point here is
+# that from time to time we may add new statements or disable some which turn
+# out not to be good discriminants.
+print STDERR "statementset... ";
+
+$dbh->do(q{
+    create table statementset (
+        id integer not null primary key,
+        newdata bool not null,              -- do we need to update eigs
+        members text not null               -- comma-separated statement ids
+    )});
+
+$dbh->do(q{
+    create index statementsetmembersidx on statementset(members)
+    });
+
+print STDERR "done.\n";
+
+# Eigenvectors of covariance matrices. We cache these, because they take a
+# while to calculate.
+print STDERR "eigenvalue, eigenvector... ";
+
+$dbh->do(q{
+    create table eigenvalue (
+        setid integer not null,     -- references statementset.id
+        n integer not null,         -- index of eigenvector
+        val real not null,
+        primary key(setid, n)
+    )});
+
+$dbh->do(q{
+    create table eigenvector (
+        setid integer not null,     -- references statementset.id
+        n integer not null,         -- references eigenvalue.n
+        i integer not null,         -- references statement.id
+        x real not null,
+        primary key(setid, n, i)
+    )});
+
+# `Celebrities' whose positions are plotted on the results scatter plot.
+print STDERR "celebrity, celebrityanswerrationale... ";
+
+$dbh->do(q{
+    create table celebrity (
+        sessionid integer primary key, -- references session
+        name string,                -- name of person/philosophy
+        country string,             -- ISO country code
+        notes string,               -- blurb
+        image string                -- URL of image, should be 200x200
+    )});
+
+$dbh->do(q{
+    create table celebrityanswerrationale (
+        sessionid integer not null, -- references session.id
+        statementid integer not null, -- references statement.id
+        rationale text              -- why this answer was given; HTML fragment
+    )});
+
+$dbh->commit();
+
+print STDERR "done.\n";
+
+$dbh->disconnect();
+
+exit 0;
+

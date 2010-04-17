@@ -1,0 +1,15 @@
+<hr>
+
+<p class="smallprint">
+Political Survey: an open, honest version of politicalcompass.org.<br>
+Copyright © 2003 <a href="http://ex-parrot.com/~chris/">Chris Lightfoot</a>.
+Available under a
+<a href="http://creativecommons.org/licenses/by-nc-sa/1.0/">Creative Commons
+Licence</a>.<br>
+Sponsored by <a href="http://mythic-beasts.com/">Mythic Beasts Ltd.</a>
+<!-- utterly horrid SHTML incantations... -->
+Check <a href="http://validator.w3.org/check?uri=http://<!--#echo var="SERVER_NAME" encoding="url" --><!--#echo var="DOCUMENT_URI" encoding="url" -->">HTML</a>;
+<a href="http://jigsaw.w3.org/css-validator/validator?uri=http://politics.beasts.org/std.css">CSS</a>.</p>
+
+</body>
+</html>

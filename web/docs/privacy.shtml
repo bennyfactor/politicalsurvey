@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!--
+    privacy.shtml:
+    Privacy statement for political survey.
+
+    Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+    Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+
+    $Id: privacy.shtml,v 1.4 2003/11/26 22:31:48 chris Exp $
+
+-->
+<head>
+<!--
+    This non-standard meta tag is necessary to prevent Microsoft Internet
+    Explorer from modifying the page as it is viewed by inserting `smart'
+    links to Microsoft-sponsored content. See
+
+        http://www.microsoft.com/windows/ie/preview/smarttags/default.asp
+
+    for more information.
+-->
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" media="screen" href="/std.css">
+<title>
+    Political Survey: Privacy Statement
+</title>
+</head>
+<body>
+
+<h1>Political Survey: Privacy Statement</h1>
+
+<!--#include virtual="menu.shtml" -->
+
+<p>When you complete the survey, the site records the following information:</p>
+
+<ul>
+<li>a randomly-generated ID number which is used to identify your survey
+results;</li>
+<li>your answers to the survey, including the country of origin you state;</li>
+<li>the IP address from which you visit these web pages;</li>
+<li>the time and date when you completed the survey.</li>
+</ul>
+
+<p>Our web logs also record any referring page information which your browser
+sends. This information is retained for about a month, is not used in the
+analysis, and will not be made publicly available.</p>
+
+<p>Because this survey is designed to be open, we will give out to others
+enough data for them to verify the results. This will be a subset of the
+above information, as follows:</p>
+
+<ul>
+<li>a <em>different</em> randomly-generated ID number, which is not connected to
+the one you were assigned when you complete the survey;</li>
+<li>your answers to the survey, including the country of origin you state.</li>
+</ul>
+
+<p>Time, date and IP address information will not be given out.</p>
+
+<p>This data and the code used to process it is available from
+<a href="internals.shtml">the internals page</a>.</p>
+
+<p>This site does not use cookies and does not attempt to track repeat
+visitors.</p>
+
+<h2>Linking to this site</h2>
+
+<p>You may want to display your results from the survey on your web page or
+web log. If you want to display the scatter plot of your position, you can do
+so either by linking to it directly, or by copying it to your own server and
+linking it from there. Either is fine by us, but note that <em>if you link to
+the image on our server, you are giving away enough information for others to
+see your detailed response page</em>, because the address of the results graph
+contains your "survey ID", which can be used to find your results page. If you
+do not wish to allow others to see your detailed results, you should copy the
+image rather than linking it.</p>
+
+
+<!--#include virtual="tail.shtml" -->

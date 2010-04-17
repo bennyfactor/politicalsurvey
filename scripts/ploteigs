@@ -1,0 +1,300 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# ploteigs:
+# Produce plots of the eigenvalues and eigenvectors.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: ploteigs,v 1.1 2003/10/31 11:34:12 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use POSIX;
+
+use IO::File;
+use IO::Pipe;
+
+use PoliticalSurvey;
+use PoliticalSurvey::Statistics qw(:std);
+
+my $plotwidth = 16;
+
+my $dbh = PoliticalSurvey::DB::database();
+
+sub read_datafile_segment ($$) {
+    my ($name, $n) = @_;
+    my $f = new IO::File("$name", O_RDONLY) or throw Error::Simple("$name: $!");
+    # Skip preceding segments.
+    while ($n > 0) {
+        while (defined($_ = $f->getline()) and !/^$/) {
+            ;
+        }
+        if (!defined($_)) {
+            $f->close();
+            throw Error::Simple("$name: can't find segment $n");
+        }
+        while (defined($_ = $f->getline()) and /^$/) {
+            ;
+        }
+        if (!defined($_)) {
+            $f->close();
+            throw Error::Simple("$name: can't find segment $n");
+        }
+        --$n;
+    }
+
+    my @r;
+    while (defined($_ = $f->getline()) and !/^$/) {
+        chomp;
+        push(@r, [split(/\s+/)]);
+    }
+    $f->close();
+    return \@r;
+}
+
+sub read_datafile ($) {
+    my ($name) = @_;
+    my $f = new IO::File("$name", O_RDONLY) or throw Error::Simple("$name: $!");
+    my @r = ( );
+    while (defined($_ = $f->getline())) {
+        chomp;
+        if (/^$/) {
+            warn "$name: file appears to be multisegment";
+            next;
+        }
+        push(@r, [split(/\s+/)]);
+    }
+    $f->close();
+    return \@r;
+}
+
+sub pipeto ($) {
+    return IO::Pipe->writer('/bin/sh', '-c', $_[0]);
+}
+
+sub plot_eigenvector_angle ($$) {
+    my ($set, $n) = @_;
+    my $name = "set-$set-eigenvector-angle-$n.eps";
+
+    unlink(".gmtcommands");
+
+    my $ssdotp = read_datafile("set-$set-subset-dotproducts");
+    my $sseval = read_datafile("set-$set-subset-eigenvalues");
+    my $cpeval = read_datafile("set-$set-real-eigenvalues");
+
+    my $r1 = $sseval->[$n]->[0] - $sseval->[$n]->[1];
+    my $r2 = $sseval->[$n]->[0] + $sseval->[$n]->[1];
+
+    $r1 /= $cpeval->[$n]->[0];
+    $r2 /= $cpeval->[$n]->[0];
+
+    my $arrowlen = 12;
+
+    $r1 *= $arrowlen;
+    $r2 *= $arrowlen;
+
+    my $ar;
+    my $a = ($ar = acos($ssdotp->[$n]->[0])) * (180. / 3.141592654);
+
+    my $plotheight = $plotwidth / 1.5;
+    my $h = $plotheight / 2;
+    my $common = "-JX$plotwidth/$plotheight -R0/$plotwidth/-$h/$h";
+
+    my $p;
+
+    system("psbasemap $common -G255 -K > $name");
+    
+    # Draw blob representing area of subset eigenvectors.
+    $p = pipeto("psxy $common -Sw$r2 -G200/200/255 -O -K >> $name");
+    $p->printf("0 0 %f %f\n", 360 - $a, $a);
+    $p->close();
+    wait();
+
+    $p = pipeto("psxy $common -Sw$r1 -G255 -O -K >> $name");
+    $p->printf("0 0 %f %f\n", 360 - $a - 1, $a + 1);
+    $p->close();
+    wait();
+
+    # Write angle on plot
+    $p = pipeto("pstext $common -G0 -O -K >> $name");
+    $p->printf("%f %f 15 %f 0 LM %0.2f@+o@+\n", ($r2 + 0.1) * cos($ar), ($r2 + 0.1) * sin($ar), $a, $a);
+    $p->close();
+    wait();
+    
+    # Draw overlay arrow, length 1; this represents the complete-dataset
+    # eigenvector.
+    $p = pipeto("psxy $common -Sv1p/6p/3p -G0 -O >> $name");
+    $p->printf("0 0 0 %f\n\n", $arrowlen);
+    $p->close();
+    wait();
+}
+
+sub plot_eigenvalues ($) {
+    my ($set) = @_;
+    my $name = "set-$set-eigenvalues.eps";
+
+    my $fakeeigs = read_datafile("set-$set-random-eigenvalues");
+    my $realeigs = read_datafile("set-$set-real-eigenvalues");
+    my $subseteigs = read_datafile("set-$set-subset-eigenvalues");
+
+    my ($min, $max) = (1e6, -1e6);
+    foreach (@$realeigs) {
+        $min = $_->[0] if ($_->[0] < $min);
+        $max = $_->[0] if ($_->[0] > $max);
+    }
+
+    my $i;
+
+    my $plotheight = $plotwidth * 0.75;
+    my $common = "-JX$plotwidth/$plotheight -R-0.5/3.25/-2/21";
+
+    my $p;
+
+    system("psbasemap $common -G255 -K > $name");
+
+    # Produce a Tufte-esque y-axis.
+    $p = pipeto("psxy $common -M -O -K >> $name");
+    for (my $i = 0; $i <= 20; $i += 5) {
+        $p->printf(">\n-0.25 %d\n-0.2 %d\n", $i, $i);
+    }
+    $p->printf(">\n-0.2 %f\n-0.2 %f\n", $min, $max);
+    $p->close();
+    wait();
+
+    $p = pipeto("pstext $common -G0 -O -K >> $name");
+    for (my $i = 0; $i <= 20; $i += 5) {
+        $p->printf("-0.26 %d 15 0 0 RM %d\n", $i, $i);
+    }
+    $p->close();
+    wait();
+
+    # Label eigenvalues.
+    $p = pipeto("pstext $common -O -K >> $name");
+    for ($i = 0; $i < 4; ++$i) {
+        $p->printf("%d -0.26 15 0 0 CT %d\n", $i, $i + 1);
+    }
+    $p->close();
+    wait();
+
+    # Plot random eigenvalues.
+    $p = pipeto("psxy $common -Ey0p/7p/255/150/150 -O -K >> $name");
+    for ($i = 0; $i < 4; ++$i) {
+        $p->printf("%d %f %f\n", $i, $fakeeigs->[$i]->[0], $fakeeigs->[$i]->[1]);
+    }
+    $p->close();
+    wait();
+
+    # Label random eigenvalues, subset error bars.
+    $p = pipeto("pstext $common -G0 -O -K >> $name");
+    $p->printf("0.05 %f 12 0 0 LM random eigenvalue\n", $fakeeigs->[0]->[0]);
+    $p->printf("0.05 %f 12 0 0 LM error in subset eigenvalues\n", $subseteigs->[0]->[0] + $subseteigs->[0]->[1]);
+    $p->printf("1.05 %f 12 0 0 LM complete data eigenvalue\n", $realeigs->[1]->[0]);
+    $p->close();
+    wait();
+
+    # Plot subset eigenvalues.
+    $p = pipeto("psxy $common -Ey0p/4p/200/200/255 -O -K >> $name");
+    for ($i = 0; $i < 2; ++$i) {
+        $p->printf("%d %f %f\n", $i, $subseteigs->[$i]->[0], $subseteigs->[$i]->[1]);
+    }
+    $p->close();
+    wait();
+
+    # Plot complete dataset eigenvalues
+    $p = pipeto("psxy $common -Sc4p -G0 -O >> $name");
+    for ($i = 0; $i < 4; ++$i) {
+        $p->printf("%d %f\n", $i, $realeigs->[$i]->[0]);
+    }
+    $p->close();
+    wait();
+}
+
+sub plot_eigenvector ($$) {
+    my ($set, $n) = @_;
+
+    my $name = "set-$set-eigenvector-$n.eps";
+
+    my $realcomps = read_datafile_segment("set-$set-real-eigenvectors", $n);
+    my $subsetcomps = read_datafile_segment("set-$set-subset-eigenvectors", $n);
+
+    my $maxcomp = @$realcomps;
+    my $min = -$maxcomp / 8;
+
+    my $i;
+
+    my $plotheight = $plotwidth * 0.75;
+    my $common = "-JX$plotwidth/$plotheight -R$min/$maxcomp/-.45/.4";
+
+    my $p;
+
+    system("psbasemap $common -G255 -K > $name");
+
+    my ($minc, $maxc) = (1e6, -1e6);
+    foreach (@$realcomps) {
+        $minc = $_->[0] if ($_->[0] < $minc);
+        $maxc = $_->[0] if ($_->[0] > $maxc);
+    }
+
+    # Plot Tufte-esque y-axis.
+    $p = pipeto("psxy  $common -M -O -K >> $name");
+    for ($i = -3; $i <= 3; ++$i) {
+        $p->printf(">\n%f %f\n%f %f\n", $min * 0.5, $i / 10., $min * 0.4, $i / 10.);
+    }
+    $p->printf(">\n%f %f\n%f %f\n", $min * 0.4, $minc, $min * 0.4, $maxc);
+    $p->printf(">\n0 0\n%d 0\n", $maxcomp - 1);     # y = 0
+    $p->close();
+    wait();
+
+    $p = pipeto("pstext $common -G0 -O -K >> $name");
+    for ($i = -3; $i <= 3; ++$i) {
+        $p->printf("%f %f 12 0 0 RM %.1f\n", $min * 0.55, $i / 10., $i / 10.);
+    }
+    for ($i = 0; $i < $maxcomp; $i += 10) {
+        $p->printf("%d -0.4 12 0 0 CT %d\n", $i, $i);
+    }
+    $p->close();
+    wait();
+
+    # Plot subset eigenvector.
+    $p = pipeto("psxy $common -Ey0p/3p/200/200/255 -O -K >> $name");
+    for ($i = 0; $i < $maxcomp; ++$i) {
+        $p->printf("%d %f %f\n", $i, $subsetcomps->[$i]->[0], $subsetcomps->[$i]->[1]);
+    }
+    $p->close();
+    wait();
+
+    # Plot complete dataset eigenvector.
+    $p = pipeto("psxy $common -Sc4p -G0 -O >> $name");
+    for ($i = 0; $i < $maxcomp; ++$i) {
+        $p->printf("%d %f\n", $i, $realcomps->[$i]->[0]);
+    }
+    $p->close();
+    wait();
+
+}
+
+try {
+    my $set = $ARGV[0];
+    $set ||= 0;
+
+    plot_eigenvector_angle($set, 0);
+    plot_eigenvector_angle($set, 1);
+
+    plot_eigenvalues($set);
+
+    plot_eigenvector($set, 0);
+    plot_eigenvector($set, 1);
+
+} catch Error::Simple with {
+    my $E = shift;
+    STDERR->printf("%s:%d: %s\n", $E->file(), $E->line(), $E->text(), $E->stacktrace());
+    STDERR->print("ploteigs: failed; aborting\n");
+};
+
+
+$dbh->disconnect();
+

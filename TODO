@@ -1,0 +1,59 @@
+
+- Independent Component Analysis rather than PCA
+
+  - Seb email of 20030716
+
+  See FastICA under http://www.stats.ox.ac.uk/~marchini/software.html
+
+  Probably need to run this under R.
+
+- In the results page, should show the map defined by the first few
+  eigenvectors, and also show where you would move on the map if you changed
+  your answer to any of the given questions; or, what questions you'd have
+  to answer differently to get to a particular point.
+
+- Offer a PDF file of the questions, and an Excel spreadsheet (or a web
+  application?) which allows the results to be computed manually.
+
+- Election manifestos: linked from http://www.howtovote.co.uk/
+
+- Offer to record a link to some web page in the session, and then to look for
+  others who've also done so and are similar / distinct in views to you.
+
+- Consider writing it up as a Kuro5hin article?
+
+- Put all this stuff into anonymous CVS.
+
+- Marginal and total distributions on the axes.
+
+- Fix the eigenvector display to account for the constant of proportionality
+  between normal/converse.
+
+- Display the numerical contribution to each eigenvector of each answer.
+
+- Mark's suggestion of displaying each respondent's `most surprising answers'.
+
+  Could do this by figuring out the probability density for each question as
+  predicted by answers to all the others, then picking ones which are less
+  probable than some threshold.
+
+- Center-right politicians among the `celebrities'?
+
+  (One of Mark's friends complained that the quiz would make it difficult to
+  take up a center-right `Ken Clarke' position. Is this true?)
+
+- Tom Steinberg suggested soliciting information about the social class, age
+  gender etc. of respondents, and attempting to weight the data to a UK mean.
+
+New questions:
+
+ - Something about the amount of new legislation:
+ 
+   Much new legislation is passed for public-relations reasons, rather than to
+   address real problems.
+
+   or, Our politicians pass too many new laws.
+
+   or, In a rapidly changing world, it is necessary to pass many new laws, even
+   if people and businesses sometimes find it hard to keep up.
+

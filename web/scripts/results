@@ -1,0 +1,193 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# results:
+# Display results from the survey. For the moment, do nothing.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: results,v 1.8 2003/11/18 23:43:38 chris Exp $';
+
+use strict;
+
+use CGI::Fast qw(-no_xhtml);
+#use CGI::Carp;
+use HTML::Entities;
+use Error qw(:try);
+
+use PoliticalSurvey;
+use PoliticalSurvey::Graphics;
+
+my $dbh = PoliticalSurvey::DB::database();
+
+try {
+    while (my $q = new CGI::Fast()) {
+
+        my $id = $q->param('surveyid');
+        throw Error::Simple('No survey ID specified') unless (defined($id));
+
+        # Need to remap the survey ID if it is over 2**31; see
+        # scripts/unneg. Nasty.
+        while ($id > 2_147_483_646) {
+            $id -= 1_000_000_000;
+        }
+
+        # Obtain results from the database.
+        throw Error::Simple(qq(no survey results found for ID "$id"))
+            unless (1 == PoliticalSurvey::DB::select_single_value($dbh, 'select count(*) from session where id = ?', $id));
+
+        # Now obtain the survey results.
+        my $answers = PoliticalSurvey::DB::get_answers($dbh, $id);
+        my %stext = map { $_->[0] => [$_->[1], $_->[2]] } @{$dbh->selectall_arrayref('select id, normal, converse from statement')};
+
+        if ($q->param('scatter')) {
+        
+            # Scatter plot of 2d position
+            
+            my $gd = PoliticalSurvey::Graphics::results_plot($dbh, $id);
+            my $png = $gd->png();
+            # Add an expires header to make this more cacheable.
+            print $q->header(-type => 'image/png',
+                             -Content_Length => length($png),
+                             -expires => '+3d'),
+                    $png;
+        } else {
+        
+            # HTML results process
+
+            # Find the relevant answer set.
+            my $setid = PoliticalSurvey::DB::get_statementset($dbh, $answers);
+            my $nstmts = scalar @{PoliticalSurvey::DB::get_statementset_by_id($dbh, $setid)};
+
+            # Now obtain the first two eigenvectors for this set, and plot the
+            # where the result falls.
+
+            print "Content-Type: text/html; charset=iso-8859-1\n\n",
+                    PoliticalSurvey::HTML::html_head("Political Survey: Results"),
+                    $q->p(q(Thank you for answering all those questions! Here
+                            are your results:)),
+                    $q->h2(q(Principal axes)),
+                    $q->p(qq(The table below shows your position in the two
+                            dimensional space defined by the principal axes
+                            of the data. There's more information about how
+                            this is calculated
+                            <a href="eigenvectors?surveyid=$id">here</a>.
+                            Note that the names "left/right" and "pragmatism"
+                            are simply labels and should be interpreted with
+                            caution. Positive values on the "left/right" axis
+                            are "right-wing", and negative values are
+                            "left-wing". Positive values on the "pragmatism"
+                            axis are "pragmatic" or "utilitarian". Negative
+                            values are the opposite, which is referred to,
+                            rather approximately, as "idealistic" below. Use
+                            the <a href="eigenvectors?surveyid=$id">list of
+                            statements</a> to find out exactly what the
+                            axes <em>do</em> mean.)),
+                    $q->p(q(The variation in the data on the "left/right"
+                            axis is much greater than the variation on the
+                            "pragmatism" axis. The most extreme values on
+                            on either axis are), sprintf('±%.4f.', 2 * sqrt($nstmts)),
+                          q(The table below shows your position in both
+                            "raw" and normalised (between -1 and 1)
+                            coordinates.));
+
+            my ($x, $y, $nx, $ny) = PoliticalSurvey::DB::get_position_2d($dbh, $id);
+
+            printf qq(<table><th></th><th>Axis</th><th>Position</th>
+                    <tr><td>1</td><td>
+                        <a href="eigenvectors?surveyid=$id#ev1">left/right</a>
+                        </td><td>%+.4f (%+.4f)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>
+                        <a href="eigenvectors?surveyid=$id#ev2">pragmatism</a>
+                        </td><td>%+.4f (%+.4f)</td>
+                    </tr></table>), $x, $nx, $y, $ny;
+
+            print $q->h2(q(Scatter plot)),
+                    $q->p(q(This diagram shows your position on the two axes
+                            in graphical form. The axes are labelled as
+                            described above. The plot has been compressed
+                            to show the relative importance of the two
+                            axes. Your position is shown as a red cross.)),
+                    $q->p($q->img({src => "results?scatter=1;surveyid=$id",
+                                    alt => 'Scatter plot of survey results'})),
+                    $q->p(q(For guidance, the names and small grey crosses on
+                            the scatter plot show <em>roughly</em> where we
+                            think the named political personalities would score
+                            on this test, for comparison. This is computed by
+                            guessing what answers these people would give. You
+                            can <a href="celebrity">look at</a> how we've
+                            assumed these people would answer the survey.  Note
+                            that <strong>these people have not actually
+                            answered the survey</strong>; their positions are
+                            based on what they are reported to have said on
+                            various issues. You should review the assumed
+                            answers for these personalities, and contact us
+                            if you think we've assigned an incorrect view to
+                            anyone.));
+
+            # Ugh. Physical formatting for the bar graph thingy.
+            print $q->h2(q(Detailed answers)),
+                    $q->p(q(This is a list of the individual statements
+                            answered, and the answers you gave to them. Note
+                            that you may not have seen <em>exactly</em> these
+                            statements when you took the survey; rather, in
+                            some cases you may have seen the opposite
+                            statements. You can see the
+                            <a href="statementlist">complete list of
+                            statements</a>, which shows each statement in both
+                            forms. Your answers have been remapped to refer
+                            to the statements in the form shown below.)),
+                q(<table>
+                  <tr>
+                  <th style="vertical-align: bottom;">Statement</th>
+                  <th style="vertical-align: bottom; align: left; border-bottom: none;"><img src="../opinion-scale.png" width="221" height="120" alt="Response"></tr>);
+            foreach (sort { $a <=> $b } keys %$answers) {
+                my $v = $answers->{$_};
+                print "<tr><td>$stext{$_}->[0]</td>";
+
+                my ($w1, $w2);
+                if ($v > 0) {
+                    $w1 = 110;
+                } else {
+                    $w1 = 10 + int(100 * (1 + $v / 2));
+                }
+                $w2 = int(100 * abs($v) / 2);
+                $w2 = 1 if ($w2 == 0);
+
+                printf '<td style="align: left;"><img src="../white.png" width="%d" height="12" alt=""><img src="../grey.png" width="%d" height="12" alt="%+.4f"></td></tr>', $w1, $w2, $v;
+            }
+            print '</table>';
+
+            print $q->h2(q(That's all)),
+                    $q->p(q(We hope you found these results interesting. If you
+                          have any comments or questions, please email
+                          <a href="mailto:chris@politics.beasts.org">Chris
+                          Lightfoot</a>. You can refer back to this page; its
+                          address is:)),
+                    $q->blockquote(encode_entities($q->self_url())),
+                    PoliticalSurvey::HTML::html_tail();
+        }
+
+        # Workaround for SQLite brokenness.
+        $dbh->rollback();
+    }
+} catch Error::Simple with {
+    my $E = shift;
+    my $msg = sprintf('%s:%d: %s', $E->file(), $E->line(), $E->text());
+    warn "caught fatal exception: $msg";
+    warn "aborting";
+    encode_entities($msg);
+    print "Status: 500\nContent-Type: text/html; charset=iso-8859-1\n\n",
+            PoliticalSurvey::HTML::html_head("Political Survey: error"),
+            q(<p>Unfortunately, something went wrong. The text of the error
+                    was:</p>),
+            qq(<blockquote class="errortext">$msg</blockquote>),
+            q(<p>Please try again later.),
+            PoliticalSurvey::HTML::html_tail();
+};
+
+$dbh->disconnect();
+

@@ -1,0 +1,105 @@
+%
+% statsnotes.tex:
+% Notes on the statistics in the survey.
+%
+% Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+% Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+%
+% $Id: statsnotes.tex,v 1.2 2003/07/16 22:18:02 chris Exp $
+%
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{mathpple}
+\usepackage{hyperref}
+\usepackage{url}
+
+\newcommand\cov{{\rm cov}}
+\newcommand\s{{\bf s}}
+\newcommand\Ss{{\bf ss}}
+
+\title{Notes on methods for the political survey}
+\author{Chris Lightfoot, $\langle$chris@ex-parrot.com$\rangle$}
+
+\begin{document}
+
+\maketitle
+
+\abstract{
+Some brief notes summarising the statistics and method in use.
+}
+
+\section{Definitions}
+
+\begin{tabular}{rl}
+$x_i$           &   $i$th variate drawn from distribution $X$           \\
+$N$             &   number of observations $x_i$                        \\
+$\s_x$          &   sum of observations of $x_i$, $\sum_i^N x_i$        \\
+$\s_{xx}$       &   sum of observations of $x_i^2$, $\sum_i^N x_i^2$    \\
+$\bar{x}$       &   mean of the $x_i$, $\s_x / N$                       \\
+$\cov(x, y)$    &   covariance between $X$ and $Y$, 
+                $\overline{xy}-\bar{x}\bar{y} = \s_{xy}/N - \s_x \s_y / N^2$\\
+$\Ss_x$         &   $\s_x - \bar{x}$                                        \\
+$a + b x$       &   best fit line for $y$ as a function of $x$;
+                    $b = \Ss_{xy} / \Ss_{xx}$, $a = \bar{y} - b \bar{x}$    \\
+$r^2$           &   correlation coefficient for linear fit;
+                    $r^2 = \Ss_{xy}^2 / \Ss_{xx} \Ss_{yy}$                  \\
+$C_{mn}$        &   covariance between variables $m$ and $n$; element in
+                    covariance matrix $C$
+\end{tabular}
+
+
+\section{Statements and answers}
+
+Each {\em statement} or proposition has a `normal' and a `converse' form. These
+are supposed to be antonyms, for instance
+
+\begin{tabular}{rl}
+{\bf normal }   & Family is more important than society.        \\
+{\bf converse } & Society is more important than family.        \\
+\end{tabular}
+
+... though many are more ambiguous than that.
+
+Each {\em answer} is an integer between $-2$ and $+2$ inclusive; we assign these
+the following labels:
+
+\begin{tabular}{rl}
+$-2$    &       disagree strongly   \\
+$-1$    &       disagree            \\
+$ 0$    &       no opinion          \\
+$+1$    &       agree               \\
+$+2$    &       agree strongly      \\
+\end{tabular}
+
+Each respondent is presented with a random mixture of normal and converse
+statements; the statements are presented in random order. A few statements are
+repeated in both forms.
+
+When we put the same statement to a respondent in both normal and converse
+forms, we record both answers, $x$ and $y$. We then compute a best-fit line
+$y = f(x) = a + bx$ between each pair of answers for that statement, and
+measure the goodness-of-fit $r^2$. For the remaining analysis we use either
+answers to the statement in its normal form or, if they are not available,
+answers in the converse form mapped to the normal form through $f(x)$. We use
+$r^2$ to verify that the two forms of the statement are fair antonyms.
+
+\section{Principal component analysis}
+
+Once we have a large number of responses to all the statements, we can compute
+the covariance between the $m$th and $n$th statements,
+$\cov(x_m, x_n) = C_{mn}$ for each $m$, $n$. $C$ is called the covariance
+matrix. Its eigenvectors ${\bf e}_k$ define {\em principal axes}, linear
+combinations of the various statements which describe the directions of maximum
+variation in the data. The corresponding eigenvalues $\lambda_k$ tell us how
+significant each axis of variation is, the eigenvectors with the largest
+$\lambda_k$ being the most significant.
+
+\section{References}
+
+\begin{itemize}
+\item{Covariance, \url{http://mathworld.wolfram.com/Covariance.html}}
+\item{Linear least squares fitting, \url{http://mathworld.wolfram.com/LeastSquaresFitting.html}}
+\item{Principal component analysis, \url{http://www.cis.hut.fi/~jhollmen/dippa/node30.html}}
+\end{itemize}
+
+\end{document}

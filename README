@@ -1,0 +1,38 @@
+This is politicalsurvey, based on the work of the late Chris Lightfoot.
+
+I will be updating this survey and harmonizing some of the question wordings
+so that it will function with the most recent American National Election 
+Survey panel results (available here: http://www.electionstudies.org/studypages/download/datacenter_all.htm) Also I would like to investigate the feasibility
+of incorporating data from Eurostat.
+
+My interest in this is primarily because even though I am a political scientist
+and statistician, I generally despise discussion of American politics and voting
+as, to me, so little of it seems evidence-based. Chris Lightfoot's idea of categorizing people based not on somebody's idea of what the political spectrum is,
+but deriving the political spectrum from people's positions on issues makes
+much more sense to me. This treats the political spectrum and its axes as
+endogenous variables: one's politics are the result of one's opinions which are
+shaped by and linked to each other. 
+
+The purpose of politicalsurvey is sort of like other surveys you might have
+seen on the Internet. However, unlike those other surveys, the results of
+where the survey-taker stands on a chart are not determined by the hosts of 
+the survey, rather, the axes of the survey are determined by aggregate response
+to the survey itself. Here, read the methodology from Lightfoot's website:
+
+"
+politicalcompass.org is a web site which asks a number of opinion questions of its visitors, and then places them in a two-dimensional space which is supposed to characterise their political views. Unfortunately, politicalcompass.org has a poor reputation; in particular, there is a suspicion that its questions are designed to make respondents lean towards an economically right-wing, socially liberal ("right libertarian") position, and the two axes of variation on which results are plotted are opaque in their derivation and may not be tremendously relevant.
+
+These suspicions are compounded by the problem that politicalcompass.org's methods are not open and, therefore, it is not possible to determine whether their selection of questions carries a bias which its operators are using to further their own ends.
+
+The purpose of this site is to do a survey of this type properly and openly, so that the methods and data in use are open to inspection.
+
+The proper way to do this is to collect a bunch of questions and a bunch of answers to them, then take the space defined by all the answers to the questions, and construct a spanning basis for it. The natural way to do this is with principal components analysis, though as a non-statistician I can't comment on whether this is actually the best approach. We should then be able to discover -- in terms defined by the answers to the questions set -- the significant axes of variation in the data.
+
+This means that all the results we get are defined by the data: we do not measure anyone's views according to criteria we set out, but according to endogenous criteria. The only points at which our judgment enters the method are
+
+ * when choosing questions (or, rather propositions); and
+ * when we give context to the results.
+
+The first of those shouldn't matter, if the questions are reasonably unbiased and cover a wide enough range of subject materials. The second doesn't matter, since it's just a presentational issue.
+" -- http://politics.beasts.org/rationale.shtml
+

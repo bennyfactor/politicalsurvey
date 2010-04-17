@@ -1,0 +1,322 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# aggregate:
+# Aggregate statistics from survey responses.
+#
+# This is a bit inefficient, since it iterates over the answers table more
+# than once, but for the moment that's OK.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = '$Id: aggregate,v 1.6 2003/08/06 10:52:36 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use DBI;
+use DBD::SQLite;
+use Math::MatrixReal;
+
+use PoliticalSurvey;
+
+my $dbh = PoliticalSurvey::DB::database();
+
+# get_statementids DBH
+# Return a reference to a list of statement IDs.
+sub get_statementids ($) {
+    my ($dbh) = @_;
+    return [map { $_->[0] } @{$dbh->selectall_arrayref('select id from statement order by id')}];
+}
+
+# update_distribution DBH TIME STATEMENTID
+# Add answers for the given STATEMENTID received up until TIME to the
+# distribution table.
+sub update_distribution ($$$) {
+    my ($dbh, $time, $id) = @_;
+
+    # normal/converse form
+    foreach my $c (0, 1) {
+        if (PoliticalSurvey::DB::select_single_value($dbh, q{
+                select count(*) from distribution where statementid = ? and converse = ?},
+                $id, $c) != 1) {
+            $dbh->do(q{
+                    insert into distribution (statementid, converse, until, nm2, nm1, n0, np1, np2)
+                    values (?, ?, 0, 0, 0, 0, 0, 0)},
+                    {}, $id, $c);
+        }
+
+        my $oldtime = PoliticalSurvey::DB::select_single_value($dbh, q{
+                select until from distribution where statementid = ? and converse = ?},
+                $id, $c);
+
+        my $s = $dbh->prepare(q{select answer.value from session, answer
+                                    where session.id = answer.sessionid
+                                      and answer.converse = ?
+                                      and answer.statementid = ?
+                                      and session.timewhen > ?
+                                      and session.timewhen <= ?});
+        $s->execute($c, $id, $oldtime, $time);
+
+        my @adjust = (0, 0, 0, 0, 0);
+
+        while (my ($val) = $s->fetchrow_array()) {
+            if ($val =~ /^0|[+-]?[12]$/) {
+                ++$adjust[$val + 2];
+            } else {
+                warn("bad answer `$val' for statement $id, converse $c");
+            }
+        }
+
+        # Save the updated values.
+        $dbh->do(q{update distribution set
+                    until = ?,
+                    nm2 = nm2 + ?, nm1 = nm1 + ?, n0 = n0 + ?, np1 = np1 + ?, np2 = np2 + ?
+                    where statementid = ? and converse = ?},
+                 {}, $time, @adjust, $id, $c);
+    }
+}
+
+# update_selfcovariance DBH TIME STATEMENTID
+# Update self-covariance data for the given STATEMENTID based on answers
+# received up until TIME.
+sub update_selfcovariance ($$$) {
+    my ($dbh, $time, $id) = @_;
+    
+    if (PoliticalSurvey::DB::select_single_value($dbh, q{
+            select count(*) from selfcovariance where statementid = ?},
+            $id) == 0) {
+        $dbh->do(q{
+                insert into selfcovariance (statementid, until, numpts,
+                        sumxy, sumxx, sumyy, sumx, sumy)
+                values (?, 0, 0, 0, 0, 0, 0, 0)}, {}, $id);
+                
+        my $oldtime = PoliticalSurvey::DB::select_single_value($dbh, q{
+                select until from selfcovariance where statementid = ?},
+                $id);
+
+        # Yuk. Need to pull pairs of answers out which occured since the last
+        # time this was run and before the marked time.
+        my $s = $dbh->prepare(q{
+                select a1.value, a2.value from session,
+                        answer as a1, answer as a2
+                  where session.timewhen > ?
+                    and session.timewhen <= ?
+                    and a1.sessionid = session.id
+                    and a2.sessionid = a1.sessionid
+                    and a1.statementid = ?
+                    and a1.statementid = a2.statementid
+                    and a1.converse = 0
+                    and a2.converse = 1});
+
+        $s->execute($oldtime, $time, $id);
+
+        my ($N, $sxy, $sxx, $syy, $sx, $sy) = (0, 0, 0, 0, 0, 0);
+
+        while (my ($x, $y) = $s->fetchrow_array()) {
+            ++$N;
+            $sxy += $x * $y;
+            $sxx += $x * $x;
+            $syy += $y * $y;
+            $sx += $x;
+            $sy += $y;
+        }
+
+        $dbh->do(q{
+                update selfcovariance set
+                    until = ?,
+                    numpts = numpts + ?,
+                    sumxy = sumxy + ?, sumxx = sumxx + ?, sumyy = sumyy + ?,
+                        sumx = sumx + ?, sumy = sumy + ?
+                    where statementid = ?},
+                 {}, $time, $N, $sxy, $sxx, $syy, $sx, $sy, $id);
+    }
+}
+
+# update_covariance DBH TIME STATEMENTIDS
+# Update covariance data from all sessions received up until TIME; STATEMENTIDS
+# is a reference to a list of statement IDs.
+sub update_covariance ($$$) {
+    my ($dbh, $time, $ss) = @_;
+
+    my ($i, $j);
+    my (@a, @b);
+    
+    # Make sure each matrix element exists. Nasty. (NB covariance matrix is
+    # symmetric.) Also get normal/converse mapping for each statement.
+    foreach $i (@$ss) {
+        foreach $j (grep { $_ <= $i } @$ss) {
+            if (PoliticalSurvey::DB::select_single_value($dbh, q{
+                select count(*) from covariance where i = ? and j = ?}, $i, $j) != 1) {
+                $dbh->do(q{
+                    insert into covariance (i, j, until, numpts, sumxy, sumxx,
+                            sumyy, sumx, sumy)
+                        values (?, ?, 0, 0, 0, 0, 0, 0, 0)}, {}, $i, $j);
+            }
+        }
+
+        ($a[$i], $b[$i]) = PoliticalSurvey::DB::get_converse_mapping($dbh, $i);
+    }
+
+    # Assume that entire matrix is updated simultaneously; OK because this
+    # update procedure runs in a transaction.
+    my $oldtime = PoliticalSurvey::DB::select_single_value($dbh, q{
+                    select until from covariance where i = ? and j = i},
+                    $ss->[0]);
+
+    # Now go through each session and add its results to the covariance
+    # matrix. We need to be able to map from converse to normal answers
+    # while we do this.
+    my $s = $dbh->prepare('select id from session where timewhen > ? and timewhen <= ?');
+    
+    $s->execute($oldtime, $time);
+
+    my %covariance_update;
+
+    while (my ($sess) = $s->fetchrow_array()) {
+        my $x = $dbh->selectall_arrayref('select statementid, converse, value from answer where sessionid = ?', {}, $sess);
+
+        # Construct hashes of forward/reverse versions of the questions.
+        my %ansn = map { $_->[0] => $_->[2] } grep { $_->[1] == 0 } @$x;
+        my %ansc = map { $_->[0] => ($a[$_->[0]] + $b[$_->[0]] * $_->[2]) } grep { $_->[1] == 1 } @$x;
+
+        foreach (@$ss) {
+            if (!exists($ansn{$_}) and exists($ansc{$_})) {
+                $ansn{$_} = $ansc{$_};
+            }
+        }
+        
+        # Ensure that this statement set has been recorded.
+        my $ll = join(',', sort { $a <=> $b } keys %ansn);
+        if ($dbh->do('update statementset set newdata = 1 where members = ?', {}, $ll) == 0) {
+            $dbh->do('insert into statementset (newdata, members) values (1, ?)', {}, $ll); # auto-increment id
+        }
+
+        foreach $i (@$ss) {
+            next unless exists $ansn{$i};
+            my $x = $ansn{$i};
+            foreach $j (grep { $_ <= $i } @$ss) {
+                next unless exists $ansn{$j};
+                my $y = $ansn{$j};
+
+                $covariance_update{"$i,$j"}->[0]++;
+                $covariance_update{"$i,$j"}->[1] += $x * $y;
+                $covariance_update{"$i,$j"}->[2] += $x * $x;
+                $covariance_update{"$i,$j"}->[3] += $y * $y;
+                $covariance_update{"$i,$j"}->[4] += $x;
+                $covariance_update{"$i,$j"}->[5] += $y;
+            }
+        }
+    }
+
+    foreach (keys %covariance_update) {
+        my ($i, $j) = split(/,/, $_);
+        $dbh->do(q{update covariance set
+                    until = ?,
+                    numpts = numpts + ?,
+                    sumxy = sumxy + ?, sumxx = sumxx + ?, sumyy = sumyy + ?,
+                    sumx = sumx + ?, sumy = sumy + ?
+                    where i = ? and j = ?},
+                    {}, $time, @{$covariance_update{$_}}, $i, $j);
+    }
+}
+
+# update_eigs DBH
+# For each set of statements which needs to be updated, build a covariance
+# matrix and compute its eigenvectors and eigenvalues.
+sub update_eigs ($) {
+    my ($dbh) = @_;
+
+    # Short-circuit.
+    return undef if (PoliticalSurvey::DB::select_single_value($dbh, 'select count(*) from statementset where newdata = 1') == 0);
+
+    # Save covariances for all statement pairs.
+    my %cov_by_stmt;
+    my $s = $dbh->prepare('select i, j, (sumxy - sumx * sumy / numpts) / numpts from covariance');
+    $s->execute();
+    while (my ($si, $sj, $cov) = $s->fetchrow_array()) {
+        $cov_by_stmt{$si}->{$sj} = $cov;
+    }
+    
+    # Now do the covariance matrix for all the statement sets we care about.
+    $s = $dbh->prepare('select id, members from statementset where newdata = 1');
+    $s->execute();
+    while (my ($setid, $members) = $s->fetchrow_array()) {
+        my @M = split(/,/, $members);
+        my $i;
+        
+        $dbh->do('delete from eigenvalue where setid = ?', {}, $setid);
+        $dbh->do('delete from eigenvector where setid = ?', {}, $setid);
+        
+        # Mapping from matrix index to statement ID and vice versa.
+        my %i2s;
+        for ($i = 0; $i < @M; ++$i) {
+            $i2s{$i} = $M[$i];
+        }
+        my %s2i = reverse %i2s;
+
+        my $mat = new Math::MatrixReal(scalar(@M), scalar(@M));
+
+        # Fill matrix.
+        foreach my $si (@M) {
+            next unless exists $s2i{$si};
+            my $i = $s2i{$si};
+            foreach my $sj (grep { $_ <= $si } @M) {
+                next unless exists $s2i{$sj};
+                my $j = $s2i{$sj};
+                $mat->assign($i + 1, $j + 1, $cov_by_stmt{$si}->{$sj});
+                $mat->assign($j + 1, $i + 1, $cov_by_stmt{$si}->{$sj});
+            }
+        }
+        
+        # Compute eigenvalues and eigenvectors. $l is a column vector of the
+        # eigenvalues, $V a matrix whose columns are the eigenvectors.
+        my ($l, $V) = $mat->sym_diagonalize();
+
+        # Split out eigenvalues/vectors.
+        my @eig = ( );
+        for (my $i = 0; $i < @M; ++$i) {
+            my @vv = map { $V->element($_ + 1, $i + 1) } (0 .. (@M - 1));
+            push(@eig, [ $l->element($i + 1, 1), [(@vv)] ]);
+        }
+
+        my $N = 0;
+        foreach (sort { abs($b->[0]) <=> abs($a->[0]) } @eig) {
+            my ($val, $vec) = @$_;
+            $dbh->do('insert into eigenvalue (setid, n, val) values (?, ?, ?)', {}, $setid, $N, $val);
+            for (my $i = 0; $i < @M; ++$i) {
+                $dbh->do('insert into eigenvector (setid, n, i, x) values (?, ?, ?, ?)', {}, $setid, $N, $i2s{$i}, $vec->[$i]);
+            }
+            ++$N;
+        }
+
+        $dbh->do('update statementset set newdata = 0 where id = ?', {}, $setid);
+
+        # Done.
+    }
+}
+
+try {
+    # Get a list of statement IDs.
+    my $ss = get_statementids($dbh);
+    my $time = time();
+    foreach my $id (@$ss) {
+        update_distribution($dbh, $time, $id);
+        update_selfcovariance($dbh, $time, $id);
+    }
+
+    update_covariance($dbh, $time, $ss);
+
+    update_eigs($dbh);
+
+    $dbh->commit();
+} catch Error::Simple with {
+    my $E = shift;
+    STDERR->printf("%s:%d: %s\n", $E->file(), $E->line(), $E->text(), $E->stacktrace());
+    STDERR->print("aggregate: failed; aborting\n");
+};
+
+$dbh->disconnect();
+

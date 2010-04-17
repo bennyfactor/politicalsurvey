@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<!--
+    internals.shtml:
+    Internals information for Political Survey.
+
+    Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+    Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+
+    $Id: internals.shtml,v 1.2 2003/11/26 22:31:48 chris Exp $
+
+-->
+<head>
+<!--
+    This non-standard meta tag is necessary to prevent Microsoft Internet
+    Explorer from modifying the page as it is viewed by inserting `smart'
+    links to Microsoft-sponsored content. See
+
+        http://www.microsoft.com/windows/ie/preview/smarttags/default.asp
+
+    for more information.
+-->
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" media="screen" href="/std.css">
+<title>
+    Political Survey: Internals
+</title>
+</head>
+<body>
+
+<h1>Political Survey: Internals</h1>
+
+<!--#include virtual="menu.shtml" -->
+
+<p>For openness, it's important that all the internals of the site are
+available to public view. At the most basic level this means that the code and
+data used must be made available (subject to the restrictions described in the
+<a href="privacy.shtml">privacy statement</a>). This, with a little luck,
+should be enough for anyone else to get their own version of the site up and
+running, and to check our own results. The data and programs may be of interest
+in their own right, too.</p>
+
+<h2>Code</h2>
+
+<p>The code which runs this site is written in
+<a href="http://www.cpan.org/">perl</a>, with a little bit of C for speed. You
+need a modern version of perl (5.6.x), and various modules:</p>
+
+<ul>
+<li>CGI</li>
+<li>CGI::Carp</li>
+<li>CGI::Fast</li>
+<li>DBD::SQLite</li>
+<li>DBI</li>
+<li>Data::Dumper</li>
+<li>Error</li>
+<li>GD</li>
+<li>HTML::Entities</li>
+<li>IO::File</li>
+<li>IO::Pipe</li>
+<li>Inline</li>
+<li>Math::MatrixReal</li>
+<li>POSIX</li>
+<li>Text::CSV</li>
+</ul>
+
+<p>Many of these may already be included in your distribution. You will also
+need a C compiler. Although there's probably not much in there which is
+UNIX-specific, I have made no effort to make the code very portable; you are
+welcome to try to get it running on any other system, but you will save yourself
+work if you use Linux.</p>
+
+<p>The database used by the site is <a href="http://www.sqlite.org/">SQLite</a>;
+the distribution for the DBD::SQLite module contains a complete copy of the
+(public domain) SQLite libraries, but you may want to get the author's original
+distribution too, as it contains the useful sqlite command-line monitor
+program.</p>
+
+<p>You can get a copy of the code as a compressed tar file:
+<a href="internals/politicalsurvey-code.tar.gz">politicalsurvey.tar.gz</a>.</p>
+
+<p>As for documentation, you're rather on your own, though the code is
+extensively commented. Please <a href="mailto:chris@politics.beasts.org">email
+me</a> with any questions.</p>
+
+<p>The code is available under the
+<a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public Licence,
+version 2</a>, or, at your option, any later version.</p>
+
+<h2>Data</h2>
+
+<p>As described in the <a href="rationale.shtml">rationale</a>, the results
+produced by this site are based on axes derived from the data itself. In order
+for the software to produce any results, it needs to be bootstrapped with a
+whole lot of data from surveys. The data from this site are available in the
+form of a bzip2-compressed dump of the SQL database, cleaned of
+privacy-sensitive information as described in the
+<a href="privacy.shtml">privacy statement</a>.</p>
+
+<p>You can download the data as
+<a href="internals/dump.sql.bz2">dump.sql.bz2</a> (quite a large file). Note
+that this dump does not contain the IP-address-to-country mapping which is used
+to guess respondents' countries of origin from their client IP addresses; that
+can be <a href="http://ip-to-country.directi.com/">obtained separately</a>.</p>
+
+<!--#include virtual="tail.shtml" -->

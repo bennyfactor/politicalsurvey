@@ -1,0 +1,109 @@
+#!/usr/bin/perl -w -I/path/to/politicalsurvey/lib
+#
+# report:
+# Produce a report on responses to the original statements and other
+# information.
+#
+# Copyright (c) 2003 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = '$Id: report,v 1.3 2003/11/11 17:05:53 chris Exp $';
+
+use strict;
+
+use Error qw(:try);
+
+use DBI;
+use DBD::SQLite;
+use Math::MatrixReal;
+
+use PoliticalSurvey;
+use PoliticalSurvey::Graphics;
+
+my $dbh = PoliticalSurvey::DB::database();
+
+try {
+    print PoliticalSurvey::HTML::html_head("Report");
+    print q(<!--#include virtual="/menu.shtml" -->);
+
+    print <<'EOF';
+<p>(I've written a
+<a href="http://ex-parrot.com/~chris/wwwitter/20030731-a_little_knowledge.html">brief
+description</a> of what this report means, which may be helpful to read
+alongside it. Note that the data here have been updated since that was
+written.)</p>
+EOF
+
+    print q(<p>So far, we have ),
+            PoliticalSurvey::DB::select_single_value($dbh, 'select count(*) from session'),
+            q( complete responses.</p>);
+
+    print "<h2>Individual statements</h2>";
+
+    my $x = $dbh->selectall_arrayref('select id, normal, converse from statement order by id');
+
+    foreach (@$x) {
+        my ($id, $normal, $converse) = @$_;
+        my ($a, $b, $r2) = PoliticalSurvey::DB::get_converse_mapping($dbh, $id);
+        print qq(<h4>$normal</h4>);
+        my $g = PoliticalSurvey::Graphics::statement_dist_plot($dbh, $id);
+        open(PNGFILE, ">s-$id.png");
+        print PNGFILE $g->png();
+        close(PNGFILE);
+
+        printf q(<p><img alt="Regression plot" src="s-%d.png" width="%d" height="%d"><br>r<sup>2</sup> = %.6f</p>), $id, $g->getBounds(), $r2;
+    }
+
+    print "<hr>";
+
+    # Correlations.
+    print "<h2>Most correlated statement pairs</h2>";
+
+    $x = $dbh->selectall_arrayref("select s1.normal, s2.normal, (sumxy - sumx * sumy / numpts) / numpts as cov from covariance, statement as s1, statement as s2 where i <> j and i = s1.id and j = s2.id and i < 64 and j < 64 order by abs(cov) desc limit 10");
+
+    print "<table><tr><td></td><th>Cov</th><th>Statement 1</th><th>Statement 2</th></tr>";
+    my $n = 1;
+    foreach (@$x) {
+        my ($s1, $s2, $cov) = @$_;
+        printf("<tr><td>%d</td><td>%+0.6f</td><td>%s</td><td>%s</td></tr>", $n++, $cov, $s1, $s2);
+    }
+    print "</table><hr>";
+
+    print "<h2>Least correlated statement pairs</h2>";
+
+    $x = $dbh->selectall_arrayref("select s1.normal, s2.normal, (sumxy - sumx * sumy / numpts) / numpts as cov from covariance, statement as s1, statement as s2 where i <> j and i = s1.id and j = s2.id and i < 64 and j < 64 order by abs(cov) asc limit 10");
+
+    print "<table><tr><td></td><th>Cov</th><th>Statement 1</th><th>Statement 2</th></tr>";
+    $n = 1;
+    foreach (@$x) {
+        my ($s1, $s2, $cov) = @$_;
+        printf("<tr><td>%d</td><td>%+0.6f</td><td>%s</td><td>%s</td></tr>", $n++, $cov, $s1, $s2);
+    }
+    print "</table><hr>";
+
+    # Eigenvectors.
+    print "<h2>Eigenvectors</h2>";
+    my @ord = qw(1st 2nd 3rd 4th 5th 6th 7th);
+    for (my $i = 0; $i < 2; ++$i) {
+        my $eig = PoliticalSurvey::DB::select_single_value($dbh, 'select val from eigenvalue where setid = 1 and n = ?', $i);
+        printf("<h3>$ord[$i] eigenvector; eigenvalue = %.6f</h3>", $eig);
+    
+        $x = $dbh->selectall_arrayref('select x, normal from eigenvector, statement where eigenvector.i = statement.id and eigenvector.setid = 1 and eigenvector.n = ? order by abs(x) desc limit 15', {}, $i);
+        print "<table><tr><th>Value</th><th>Statement</th></tr>";
+        foreach (@$x) {
+            my ($v, $t) =@$_;
+            printf("<tr><td>%+0.6f</td><td>%s</td></tr>", $v, $t);
+        }
+        print "</table>";
+    }
+ 
+    print q(<!--#include virtual="/tail.shtml" -->)
+ 
+} catch Error::Simple with {
+    my $E = shift;
+    STDERR->printf("%s:%d: %s\n", $E->file(), $E->line(), $E->text(), $E->stacktrace());
+    STDERR->print("report: failed; aborting\n");
+};
+
+$dbh->disconnect();
